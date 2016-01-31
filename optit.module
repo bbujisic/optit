@@ -1,0 +1,368 @@
+<?php
+
+define('OPTIT_URL', 'api.optitmobile.com/1');
+
+
+/**
+ * Implementation of hook_help().
+ */
+function optit_help($path, $arg) {
+  switch ($path) {
+    case "admin/structure/optit/message":
+      return "<p>" . t("Send a text message to the subscribed members of a keyword.") . "</p>";
+      break;
+    case "admin/structure/optit/members":
+      return "<p>" . t("This is an Opt It membership administration page. You can find a member here and unsubscribe them from all keywords.") . "</p>";
+      break;
+    case "admin/structure/optit/keywords":
+      return "<p>" . t("Use keywords to run multiple programs. Setup one or many keywords for subscription groups, contests, voting, auto-responses, message forwarding and segmenting your users. Click on the Actions link for keyword-specific operations.") . "</p>";
+      break;
+    case "admin/structure/optit/keywords/%/subscriptions":
+      return "<p>" . t("In this page, you can administer subscriptions to a keyword. You can opt-in and opt-out phone numbers, send messages to entire group, or message individual subscriber.") . "</p>";
+      break;
+    case "admin/structure/optit/keywords/%/interests":
+      return "<p>" . t("Group your customers into interests. Group them based on demographics, message history, location and more. Use interests to send targeted messages.") . "</p>";
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_permission().
+ */
+function optit_permission() {
+  return array(
+    'optit send message' => array(
+      'title' => t('Send a message'),
+      'description' => t('Permission to send messages to Opt It members.'),
+    ),
+    'optit view keywords' => array(
+      'title' => t('View keywords, interests and subscriptions'),
+      'description' => t('Permission to view Opt It keywords, interests and subscriptions.'),
+    ),
+    'optit edit keywords' => array(
+      'title' => t('Create or edit keywords, interests and subscriptions'),
+      'description' => t('Permission to create or edit Opt It keywords, interests and subscriptions.'),
+    ),
+    'optit view members' => array(
+      'title' => t('View members'),
+      'description' => t('Permission to view Opt It members.'),
+    ),
+    'optit edit members' => array(
+      'title' => t('Create or edit members'),
+      'description' => t('Permission to create or edit Opt It members.'),
+    ),
+  );
+}
+
+
+/**
+ * Implementation of hook_menu().
+ */
+function optit_menu() {
+
+  // Module settings.
+  $items['admin/config/services/optit'] = array(
+    'title' => 'Opt It Mobile',
+    'description' => 'Opt It Mobile administration page.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('optit_admin_page'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'optit.admin.inc',
+  );
+
+  $items['admin/structure/optit'] = array(
+    'title' => 'Optit',
+    'description' => 'Administer your Optit account.',
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+
+  // List of all keywords in the system.
+  $items['admin/structure/optit/keywords'] = array(
+    'title' => 'Keywords',
+    'description' => 'Opt It Mobile keywords administration.',
+    'page callback' => 'optit_keywords_page',
+    // @todo: 'administer optit keywords' permission
+    'access arguments' => array('optit view keywords'),
+    'file' => 'optit.keywords.inc',
+  );
+
+  // Create a keyword.
+  $items['admin/structure/optit/keywords/new'] = array(
+    'title' => 'New keyword',
+    'description' => 'Create a new Opt It Mobile keyword.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('optit_keyword_edit_form'),
+    // @todo: 'administer optit keywords' permission
+    'access arguments' => array('optit edit keywords'),
+    'file' => 'optit.keywords.inc',
+    'type' => MENU_LOCAL_ACTION,
+  );
+
+  // List interests per keyword.
+  $items['admin/structure/optit/keywords/%/interests'] = array(
+    'title' => 'List interests',
+    'description' => 'List interests.',
+    'page callback' => 'optit_interests_list',
+    'page arguments' => array(4),
+    // @todo: 'administer optit keywords' permission
+    'access arguments' => array('optit view keywords'),
+    'file' => 'optit.interests.inc',
+  );
+
+  // List subscriptions per keyword.
+  $items['admin/structure/optit/keywords/%/subscriptions'] = array(
+    'title' => 'Subscriptions',
+    'description' => 'List of subscriptions per keyword.',
+    'page callback' => 'optit_subscriptions_list',
+    'page arguments' => array(4),
+    // @todo: 'administer optit keywords' permission
+    'access arguments' => array('optit view keywords'),
+    'file' => 'optit.subscriptions.inc',
+  );
+
+  // Subscribe to a keyword.
+  $items['admin/structure/optit/keywords/%/subscriptions/new'] = array(
+    'title' => 'New subscription',
+    'description' => 'Create a new subscription.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array(
+      'optit_subscriptions_edit_form',
+      4
+    ),
+    // @todo: 'administer optit keywords' permission
+    'access arguments' => array('optit edit keywords'),
+    'file' => 'optit.subscriptions.inc',
+    'type' => MENU_LOCAL_ACTION,
+  );
+
+  // Unsubscribe from a keyword.
+  $items['admin/structure/optit/keywords/%/subscriptions/%/unsubscribe'] = array(
+    'title' => 'Unsubscribe',
+    'description' => 'Unsubscribe member from a single keyword.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array(
+      'optit_subscription_cancel_keyword',
+      4,
+      6
+    ),
+    // @todo: 'administer optit keywords' permission
+    'access arguments' => array('optit edit keywords'),
+    'file' => 'optit.subscriptions.inc',
+  );
+
+  // List subscriptions per interest.
+  $items['admin/structure/optit/keywords/%/interests/%/subscriptions'] = array(
+    'title' => 'List subscriptions based on interest',
+    'description' => 'Subscriptions per interest.',
+    'page callback' => 'optit_subscriptions_interest_list',
+    'page arguments' => array(
+      4,
+      6
+    ),
+    // @todo: 'administer optit keywords' permission
+    'access arguments' => array('optit view keywords'),
+    'file' => 'optit.subscriptions.inc',
+  );
+
+  // Subscribe to an interest.
+  $items['admin/structure/optit/keywords/%/interests/%/subscriptions/new'] = array(
+    'title' => 'Subscribe a member to an interest',
+    'description' => 'Subscribe a member to an interest.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array(
+      'optit_subscription_subscribe_interest',
+      4,
+      6
+    ),
+    // @todo: 'administer optit keywords' permission
+    'access arguments' => array('optit edit keywords'),
+    'file' => 'optit.subscriptions.inc',
+    'type' => MENU_LOCAL_ACTION,
+  );
+
+  // Unsubscribe from an interest.
+  $items['admin/structure/optit/members/%/interests/%/unsubscribe'] = array(
+    'title' => 'Unsubscribe interest',
+    'description' => 'Unsubscribe phone number from interest.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array(
+      'optit_subscription_cancel_interest',
+      4,
+      6
+    ),
+    // @todo: 'administer optit keywords' permission
+    'access arguments' => array('optit edit keywords'),
+    'file' => 'optit.subscriptions.inc',
+  );
+
+  // Create an interest.
+  $items['admin/structure/optit/keywords/%/interests/new'] = array(
+    'title' => 'New interest',
+    'description' => 'Create a new interest.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array(
+      'optit_interests_edit_form',
+      4
+    ),
+    // @todo: 'administer optit keywords' permission
+    'access arguments' => array('optit edit keywords'),
+    'file' => 'optit.interests.inc',
+    'type' => MENU_LOCAL_ACTION,
+  );
+
+  // Edit a keyword.
+  $items['admin/structure/optit/keywords/%/edit'] = array(
+    'title' => 'Edit keyword',
+    'description' => 'Edit an Opt It Mobile keyword.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array(
+      'optit_keyword_edit_form',
+      4
+    ),
+    // @todo: 'administer optit keywords' permission
+    'access arguments' => array('optit edit keywords'),
+    'file' => 'optit.keywords.inc',
+  );
+
+  // List members.
+  $items['admin/structure/optit/members'] = array(
+    'title' => 'Members',
+    'description' => 'List of Opt It members.',
+    'page callback' => 'optit_members_list',
+    // @todo: 'administer optit keywords' permission
+    'access arguments' => array('optit view members'),
+    'file' => 'optit.members.inc',
+  );
+
+  // Unsubscribe member from all keywords.
+  $items['admin/structure/optit/members/%/unsubscribe'] = array(
+    'title' => 'Unsubscribe',
+    'description' => 'Unsubscribe member from all keywords.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array(
+      'optit_subscription_cancel_all',
+      4
+    ),
+    // @todo: 'administer optit keywords' permission
+    'access arguments' => array('optit edit members'),
+    'file' => 'optit.subscriptions.inc',
+  );
+
+  return $items;
+}
+
+
+function optit_dev() {
+  $optit = optit_instantiate();
+
+  //$data = $optit->subscriptionCreate(20455, '11115552222');
+  $data = $optit->subscriptionCreate(20455, null, 25781345, '70529,70533', 'Let me try to change name', 'MyFancyLastName', 'Address1', 'Address2', 'Belgrade', 'MO', '26000', 'male', '20150101', 'b@example.com');
+
+  dsm($data->toArray());
+  return 'bla';
+}
+
+
+/**
+ * Loads necessary settings and instantiates Optit object.
+ *
+ * @return Optit
+ */
+function optit_instantiate() {
+  $optit = &drupal_static(__FUNCTION__);
+  if (!isset($optit)) {
+    module_load_include('php', 'optit', 'inc/Optit');
+    module_load_include('php', 'optit', 'inc/Entity');
+    module_load_include('php', 'optit', 'inc/Keyword');
+    module_load_include('php', 'optit', 'inc/Interest');
+    module_load_include('php', 'optit', 'inc/Member');
+    module_load_include('php', 'optit', 'inc/Subscription');
+    module_load_include('php', 'optit', 'inc/RESTclient');
+    module_load_include('php', 'optit', 'inc/XML2Array');
+    $optit = new Optit(variable_get('optit_username', ''), variable_get('optit_password', ''), OPTIT_URL);
+  }
+  return $optit;
+
+}
+
+
+function _optit_us_states() {
+  return array(
+    'AL' => 'Alabama',
+    'AK' => 'Alaska',
+    'AZ' => 'Arizona',
+    'AR' => 'Arkansas',
+    'CA' => 'California',
+    'CO' => 'Colorado',
+    'CT' => 'Connecticut',
+    'DE' => 'Delaware',
+    'FL' => 'Florida',
+    'GA' => 'Georgia',
+    'HI' => 'Hawaii',
+    'ID' => 'Idaho',
+    'IL' => 'Illinois',
+    'IN' => 'Indiana',
+    'IA' => 'Iowa',
+    'KS' => 'Kansas',
+    'KY' => 'Kentucky',
+    'LA' => 'Louisiana',
+    'ME' => 'Maine',
+    'MD' => 'Maryland',
+    'MA' => 'Massachusetts',
+    'MI' => 'Michigan',
+    'MN' => 'Minnesota',
+    'MS' => 'Mississippi',
+    'MO' => 'Missouri',
+    'MT' => 'Montana',
+    'NE' => 'Nebraska',
+    'NV' => 'Nevada',
+    'NH' => 'New Hampshire',
+    'NJ' => 'New Jersey',
+    'NM' => 'New Mexico',
+    'NY' => 'New York',
+    'NC' => 'North Carolina',
+    'ND' => 'North Dakota',
+    'OH' => 'Ohio',
+    'OK' => 'Oklahoma',
+    'OR' => 'Oregon',
+    'PA' => 'Pennsylvania',
+    'RI' => 'Rhode Island',
+    'SC' => 'South Carolina',
+    'SD' => 'South Dakota',
+    'TN' => 'Tennessee',
+    'TX' => 'Texas',
+    'UT' => 'Utah',
+    'VT' => 'Vermont',
+    'VA' => 'Virginia',
+    'WA' => 'Washington',
+    'WV' => 'West Virginia',
+    'WI' => 'Wisconsin',
+    'WY' => 'Wyoming',
+    'DC' => 'District of Columbia',
+  );
+}
+
+function _optit_actions($links) {
+  unset($_GET['destination']);
+  foreach ($links as $key => $link) {
+    $links[$key]['query'] = drupal_get_destination();
+  }
+  if (module_exists('ctools')) {
+    return theme('ctools_dropdown', array(
+      'links' => $links,
+      'title' => t('Actions'),
+    ));
+  }
+  return theme('links', array('links' => $links));
+}
+
+
+function optit_phone_validate($phone) {
+  if ((strlen($phone) == 11) && ctype_digit($phone)) {
+    return TRUE;
+  }
+  return FALSE;
+}

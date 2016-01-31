@@ -1,0 +1,219 @@
+<?php
+
+
+/**
+ * Implementation of hook_help().
+ */
+function optit_send_help($path, $arg) {
+  switch ($path) {
+    case "admin/structure/optit/message":
+      return "<p>" . t("Send a text message to the subscribed members of a keyword.") . "</p>";
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function optit_send_menu() {
+
+  $items['admin/structure/optit/message'] = array(
+    'title' => 'Send message',
+    'description' => 'Choose a keyword and send a message.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('optit_send_keyword'),
+    'access arguments' => array('optit send message'),
+  );
+
+  $items['admin/structure/optit/keywords/%/subscriptions/message'] = array(
+    'title' => 'Send message',
+    'description' => 'Send message to keyword subscribers.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('optit_send_keyword', 4),
+    'access arguments' => array('optit send message'),
+    'type' => MENU_LOCAL_ACTION,
+  );
+
+  $items['admin/structure/optit/keywords/%/subscriptions/message/%'] = array(
+    'title' => 'Send message',
+    'description' => 'Send message to keyword subscribers.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('optit_send_keyword', 4, 6),
+    'access arguments' => array('optit send message'),
+  );
+
+  $items['admin/structure/optit/keywords/%/interests/%/subscriptions/message'] = array(
+    'title' => 'Send message',
+    'description' => 'Send message to interest subscribers.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('optit_send_interest', 4, 6),
+    'access arguments' => array('optit send message'),
+    'type' => MENU_LOCAL_ACTION,
+  );
+
+  return $items;
+
+}
+
+
+function optit_send_keyword($form, $form_state, $keywordId = null, $phone = null) {
+  $optit = optit_instantiate();
+  $keywords = $optit->keywordsGet();
+  $options = array();
+  foreach ($keywords as $keyword) {
+    $options[$keyword->get('id')] = $keyword->get('keyword_name');
+  }
+
+
+  if (!$keywordId) {
+    $form['keyword_id'] = array(
+      '#title' => t('Keyword'),
+      '#description' => t('Please choose a keyword.'),
+      '#type' => 'select',
+      '#options' => $options,
+      '#required' => TRUE,
+    );
+  }
+  else {
+    $form['keyword_id'] = array(
+      '#type' => 'value',
+      '#value' => $keywordId,
+      // Okay, following line is really ugly, but I need it for cleaner validation, otherwise, I'd have to run two optit queries.
+      '#options' => $options,
+    );
+  }
+
+  $form['phone'] = array(
+    '#type' => 'value',
+    '#value' => $phone,
+  );
+
+  $form['title'] = array(
+    '#title' => t('Title'),
+    '#description' => t('Please enter a title of message. This does not appear in the text message and is just used in the application as a short description of your message.'),
+    '#type' => 'textfield',
+    '#required' => TRUE,
+  );
+
+  $form['message'] = array(
+    '#title' => t('Message'),
+    '#description' => t('Please enter a text message. The message must be less than 160 characters including your keyword in the beginning of the message.'),
+    '#type' => 'textarea',
+    '#required' => TRUE,
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+  return $form;
+}
+
+function optit_send_keyword_validate($form, &$form_state) {
+  // Make sure keyword and message are less than 160 characters.
+  $keywordId = $form_state['values']['keyword_id'];
+  $message = $form_state['values']['message'];
+  $keyword = $form['keyword_id']['#options'][$keywordId];
+
+//  // If phone number was provided, it needs to be made of 11 digits.
+//  $phone = $form_state['values']['phone'];
+//  if (isset($phone)) {
+//    if (!optit_phone_validate($phone)) {
+//      form_set_error('phone', t('Invalid phone number. Mobile phone number should include country code and be 11 digit long. Example: 12225551212'));
+//    }
+// }
+
+  $length = strlen($keyword . ': ' . $message);
+  if ($length > 160) {
+    form_set_error('message', t('The message must be less than 160 characters including your keyword in the beginning of the message. Your message has :length characters', array(':length' => $length)));
+  };
+}
+
+function optit_send_keyword_submit($form, &$form_state) {
+  $keywordId = $form_state['values']['keyword_id'];
+  $message = $form_state['values']['message'];
+  $title = $form_state['values']['title'];
+
+  $optit = optit_instantiate();
+  if ($form_state['values']['phone']) {
+    $success = $optit->messagePhone($form_state['values']['phone'], $keywordId, $title, $message);
+  }
+  else {
+    $success = $optit->messageKeyword($keywordId, $title, $message);
+  }
+
+  if ($success) {
+    drupal_set_message(t('Message was successfully sent.'));
+  }
+  else {
+    drupal_set_message(t('The message could not be sent. Please consult error log for details.', 'error'));
+  }
+}
+
+
+function optit_send_interest($form, $form_state, $keywordId, $interestId) {
+
+  $form['interest_id'] = array(
+    '#type' => 'value',
+    '#value' => $interestId,
+  );
+
+  $form['keyword_id'] = array(
+    '#type' => 'value',
+    '#value' => $keywordId,
+  );
+
+  $form['title'] = array(
+    '#title' => t('Title'),
+    '#description' => t('Please enter a title of message. This does not appear in the text message and is just used in the application as a short description of your message.'),
+    '#type' => 'textfield',
+    '#required' => TRUE,
+  );
+
+  $form['message'] = array(
+    '#title' => t('Message'),
+    '#description' => t('Please enter a text message. The message must be less than 160 characters including your keyword in the beginning of the message.'),
+    '#type' => 'textarea',
+    '#required' => TRUE,
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+  return $form;
+}
+
+function optit_send_interest_validate($form, &$form_state) {
+  // Make sure keyword and message are less than 160 characters.
+  $interestId = $form_state['values']['interest_id'];
+  $message = $form_state['values']['message'];
+
+  $optit = optit_instantiate();
+  $interest = $optit->interestGet($interestId);
+
+  $length = strlen($interest->get('name') . ': ' . $message);
+
+  if ($length > 160) {
+    form_set_error('message', t('The message must be less than 160 characters including your keyword in the beginning of the message. Your message has :length characters', array(':length' => $length)));
+  };
+}
+
+function optit_send_interest_submit($form, &$form_state) {
+  $interestId = $form_state['values']['interest_id'];
+  $message = $form_state['values']['message'];
+  $title = $form_state['values']['title'];
+
+  $optit = optit_instantiate();
+  $success = $optit->messageInterest($interestId, $title, $message);
+
+  if ($success) {
+    drupal_set_message(t('Message was successfully sent.'));
+  }
+  else {
+    drupal_set_message(t('The message could not be sent. Please consult error log for details.'), 'error');
+  }
+
+  if (!isset($_GET['destination'])) {
+    // default redirection could be better...
+    $form_state['redirect'] = "admin/structure/optit/keywords/{$form_state['values']['keyword_id']}/interests/{$form_state['values']['interest_id']}/subscriptions";
+  }
+}

@@ -1,0 +1,6 @@
+name = Opt It Mobile: Send
+description = "Simple manual messaging interface."
+package = Opt It
+core = 7.x
+
+dependencies[] = optit
