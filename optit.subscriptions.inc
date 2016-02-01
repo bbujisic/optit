@@ -94,9 +94,15 @@ function optit_subscriptions_edit_form($form, $form_state, $keyword_id) {
   if (count($options) > 0) {
     $form['interest_id'] = array(
       '#title' => t('Interests'),
-      '#description' => t('THIS SHOULD BE A SELECT ELEMENT AND VALUES SHOULD BE LOADED FROM OPTIT!!'),
+      '#description' => t('You can limit subscription to certain interests only.'),
       '#type' => 'checkboxes',
       '#options' => $options,
+    );
+  }
+  else {
+    $form['interest_id'] = array(
+      '#type' => 'value',
+      '#value' => array(),
     );
   }
 
