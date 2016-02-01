@@ -398,7 +398,7 @@ class Optit {
    */
   public function subscriptionGetByPhone($keywordId, $phone) {
     $response = $this->http->get("keywords/{$keywordId}/subscriptions/{$phone}");
-    dsm($response);
+    //dsm($response);
     return Subscription::create($response['subscription']);
   }
 

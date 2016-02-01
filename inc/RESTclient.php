@@ -86,7 +86,7 @@ class RESTclient {
   }
 
   private function handleError($response) {
-    dsm($response);
+    //dsm($response);
     return FALSE;
   }
 }
