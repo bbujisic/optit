@@ -1,15 +1,19 @@
 <?php
+/**
+ * @file
+ * Pages and forms related to interest administration.
+ */
 
 /**
  * Page callback for the table with all interests for the given keyword.
  *
  * @route("admin/structure/optit/keywords/%/interests")
  */
-function optit_interests_list($keywordId) {
+function optit_interests_list($keyword_id) {
 
   // Initiate bridge class and dependencies and get the list of keywords from the API.
   $optit = optit_instantiate();
-  $interests = $optit->interestsGet($keywordId);
+  $interests = $optit->interestsGet($keyword_id);
 
   // Start building vars for theme_table.
   $vars = array(
@@ -32,16 +36,16 @@ function optit_interests_list($keywordId) {
     $actions = array();
     $actions[] = array(
       'title' => t('View subscriptions'),
-      'href' => "admin/structure/optit/keywords/{$keywordId}/interests/{$interest->get('id')}/subscriptions"
+      'href' => "admin/structure/optit/keywords/{$keyword_id}/interests/{$interest->get('id')}/subscriptions"
     );
     $actions[] = array(
       'title' => t('Subscribe a member'),
-      'href' => "admin/structure/optit/keywords/{$keywordId}/interests/{$interest->get('id')}/subscriptions/new"
+      'href' => "admin/structure/optit/keywords/{$keyword_id}/interests/{$interest->get('id')}/subscriptions/new"
     );
     if (module_exists('optit_send')) {
       $actions[] = array(
         'title' => t('Send message'),
-        'href' => "admin/structure/optit/keywords/{$keywordId}/interests/{$interest->get('id')}/subscriptions/message"
+        'href' => "admin/structure/optit/keywords/{$keyword_id}/interests/{$interest->get('id')}/subscriptions/message"
       );
     }
 
@@ -65,19 +69,19 @@ function optit_interests_list($keywordId) {
  *
  * @route("admin/structure/optit/keywords/%/interests/new")
  */
-function optit_interests_edit_form($form, $form_state, $keywordId) {
+function optit_interests_edit_form($form, $form_state, $keyword_id) {
 
 
   $form['keywordId'] = array(
     "#type" => 'value',
-    "#value" => $keywordId
+    "#value" => $keyword_id
   );
 
   $form['name'] = array(
     '#title' => t('Name'),
     '#description' => t('Name of the interest'),
     '#type' => 'textfield',
-    '#required' => true,
+    '#required' => TRUE,
   );
 
   $form['description'] = array(

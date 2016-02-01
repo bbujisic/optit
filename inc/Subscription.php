@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Contains \Optit\Subscription.
+ */
 
 namespace Optit;
 
@@ -12,7 +16,7 @@ class Subscription extends Entity {
   protected $url_member;
 
 
-  public static function create(array $values, $skipValidation = false) {
+  public static function create(array $values, $skipValidation = FALSE) {
     $entity = new Subscription();
     foreach ($values as $parameter => $value) {
       // No need to waste time on validation.

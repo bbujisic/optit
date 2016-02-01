@@ -1,11 +1,15 @@
 <?php
+/**
+ * @file
+ * Pages and forms related to subscription administration.
+ */
 
 /**
  * Page: Table with all subscriptions for the given keyword.
  *
  * @route("admin/structure/optit/keywords/%/subscriptions")
  */
-function optit_subscriptions_list($keywordId) {
+function optit_subscriptions_list($keyword_id) {
   // Initiate bridge class and dependencies.
   $optit = optit_instantiate();
 
@@ -14,7 +18,7 @@ function optit_subscriptions_list($keywordId) {
 
   // Run query against the API.
   $entities = $optit->setPage($page)
-    ->subscriptionsGet($keywordId);
+    ->subscriptionsGet($keyword_id);
 
   // Start building vars for theme_table.
   $vars = array(
@@ -35,11 +39,11 @@ function optit_subscriptions_list($keywordId) {
     $actions = array();
     $actions[] = array(
       'title' => t('Unsubscribe'),
-      'href' => "admin/structure/optit/keywords/{$keywordId}/subscriptions/{$entity->get('phone')}/unsubscribe"
+      'href' => "admin/structure/optit/keywords/{$keyword_id}/subscriptions/{$entity->get('phone')}/unsubscribe"
     );
     $actions[] = array(
       'title' => t('Send message'),
-      'href' => "admin/structure/optit/keywords/{$keywordId}/subscriptions/message/{$entity->get('phone')}"
+      'href' => "admin/structure/optit/keywords/{$keyword_id}/subscriptions/message/{$entity->get('phone')}"
     );
 
     $vars['rows'][] = array(
@@ -63,12 +67,12 @@ function optit_subscriptions_list($keywordId) {
  *
  * @route("admin/structure/optit/keywords/%/subscriptions/new")
  */
-function optit_subscriptions_edit_form($form, $form_state, $keywordId) {
+function optit_subscriptions_edit_form($form, $form_state, $keyword_id) {
   $optit = optit_instantiate();
 
   $form['keywordId'] = array(
     "#type" => 'value',
-    "#value" => $keywordId
+    "#value" => $keyword_id
   );
   $form['phone'] = array(
     '#title' => t('Phone'),
@@ -82,7 +86,7 @@ function optit_subscriptions_edit_form($form, $form_state, $keywordId) {
   );
 
   $options = array();
-  $interests = $optit->interestsGet($keywordId);
+  $interests = $optit->interestsGet($keyword_id);
   foreach ($interests as $interest) {
     $options[$interest->get('id')] = $interest->get('name');
   }
@@ -240,19 +244,19 @@ function optit_subscription_cancel_all_submit($form, &$form_state) {
  *
  * @route("admin/structure/optit/keywords/%/subscriptions/%/unsubscribe")
  */
-function optit_subscription_cancel_keyword($form, $form_state, $keywordId, $phone) {
+function optit_subscription_cancel_keyword($form, $form_state, $keyword_id, $phone) {
   $form['phone'] = array(
     '#type' => 'value',
     '#value' => $phone,
   );
   $form['keyword_id'] = array(
     '#type' => 'value',
-    '#value' => $keywordId,
+    '#value' => $keyword_id,
   );
 
   return confirm_form($form, t('Are you sure you want to unsubscribe phone number :phone from keyword :keyword?', array(
     ':phone' => $phone,
-    ':keyword' => $keywordId
+    ':keyword' => $keyword_id
   )), 'admin/structure/optit/members', t('This action cannot be undone.'), t('Unsubscribe'), t('Cancel'));
 }
 
@@ -278,7 +282,7 @@ function optit_subscription_cancel_keyword_submit($form, &$form_state) {
  *
  * @route("admin/structure/optit/keywords/%/interests/%/unsubscribe")
  */
-function optit_subscriptions_interest_list($keywordId, $interestId) {
+function optit_subscriptions_interest_list($keyword_id, $interest_id) {
   // Initiate bridge class and dependencies.
   $optit = optit_instantiate();
 
@@ -287,7 +291,7 @@ function optit_subscriptions_interest_list($keywordId, $interestId) {
 
   // Run query against the API.
   $entities = $optit->setPage($page)
-    ->interestGetSubscriptions($interestId);
+    ->interestGetSubscriptions($interest_id);
 
   // Start building vars for theme_table.
   $vars = array(
@@ -308,7 +312,7 @@ function optit_subscriptions_interest_list($keywordId, $interestId) {
     $actions = array();
     $actions[] = array(
       'title' => t('Unsubscribe'),
-      'href' => "admin/structure/optit/members/{$entity->get('phone')}/interests/{$interestId}/unsubscribe"
+      'href' => "admin/structure/optit/members/{$entity->get('phone')}/interests/{$interest_id}/unsubscribe"
     );
 
     $vars['rows'][] = array(
@@ -330,31 +334,31 @@ function optit_subscriptions_interest_list($keywordId, $interestId) {
  * Form: Subscribe a user to an interest
  * @route("admin/structure/optit/keywords/%/interests/%/subscription/new")
  */
-function optit_subscription_subscribe_interest($form, $form_state, $keywordId, $interestId) {
+function optit_subscription_subscribe_interest($form, $form_state, $keyword_id, $interest_id) {
   $optit = optit_instantiate();
 
   // First load all phone numbers subscribed to a given keyword.
-  $keywordSubscriptions = $optit->subscriptionsGet($keywordId);
+  $keyword_subscriptions = $optit->subscriptionsGet($keyword_id);
   $phones = array();
-  foreach ($keywordSubscriptions as $keywordSubscription) {
-    $phones[$keywordSubscription->get('phone')] = $keywordSubscription->get('phone');
+  foreach ($keyword_subscriptions as $keyword_subscription) {
+    $phones[$keyword_subscription->get('phone')] = $keyword_subscription->get('phone');
   }
 
   // Then remove all phone numbers that were already subscribed to a given interest.
-  $interestSubscriptions = $optit->interestGetSubscriptions($interestId);
-  foreach ($interestSubscriptions as $interestSubscription) {
-    unset($phones[$interestSubscription->get('phone')]);
+  $interest_subscriptions = $optit->interestGetSubscriptions($interest_id);
+  foreach ($interest_subscriptions as $interest_subscription) {
+    unset($phones[$interest_subscription->get('phone')]);
   }
 
   // @todo: Handle exception when there are not phone numbers subscribed to the given keyword_id: redirect to keyword registration and set a nice message.
 
   $form['keyword_id'] = array(
     '#type' => 'value',
-    '#value' => $keywordId,
+    '#value' => $keyword_id,
   );
   $form['interest_id'] = array(
     '#type' => 'value',
-    '#value' => $interestId,
+    '#value' => $interest_id,
   );
   $form['phone'] = array(
     '#title' => t('Phone number'),
@@ -396,19 +400,19 @@ function optit_subscription_subscribe_interest_submit($form, &$form_state) {
  *
  * @route("admin/structure/optit/members/%/interests/%/unsubscribe")
  */
-function optit_subscription_cancel_interest($form, $form_state, $phone, $interestId) {
+function optit_subscription_cancel_interest($form, $form_state, $phone, $interest_id) {
   $form['phone'] = array(
     '#type' => 'value',
     '#value' => $phone,
   );
   $form['interest_id'] = array(
     '#type' => 'value',
-    '#value' => $interestId,
+    '#value' => $interest_id,
   );
 
   return confirm_form($form, t('Are you sure you want to unsubscribe phone number :phone from interest :interest?', array(
     ':phone' => $phone,
-    ':interest' => $interestId
+    ':interest' => $interest_id
   )), 'admin/structure/optit/members', t('This action cannot be undone.'), t('Unsubscribe'), t('Cancel'));
 }
 

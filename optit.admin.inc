@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * The admin page.
+ */
 
 function optit_admin_page() {
   $form['credentials'] = array(

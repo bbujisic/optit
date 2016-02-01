@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Contains \Optit\Interest.
+ */
 
 namespace Optit;
 
@@ -13,7 +17,7 @@ class Interest extends Entity {
   protected $status;
 
 
-  public static function create(array $values, $skipValidation = false) {
+  public static function create(array $values, $skipValidation = FALSE) {
     $interest = new Interest();
     foreach ($values as $parameter => $value) {
       // No need to waste time on validation.

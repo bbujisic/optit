@@ -56,7 +56,7 @@ function optit_send_menu() {
 }
 
 
-function optit_send_keyword($form, $form_state, $keywordId = null, $phone = null) {
+function optit_send_keyword($form, $form_state, $keyword_id = NULL, $phone = NULL) {
   $optit = optit_instantiate();
   $keywords = $optit->keywordsGet();
   $options = array();
@@ -65,7 +65,7 @@ function optit_send_keyword($form, $form_state, $keywordId = null, $phone = null
   }
 
 
-  if (!$keywordId) {
+  if (!$keyword_id) {
     $form['keyword_id'] = array(
       '#title' => t('Keyword'),
       '#description' => t('Please choose a keyword.'),
@@ -77,7 +77,7 @@ function optit_send_keyword($form, $form_state, $keywordId = null, $phone = null
   else {
     $form['keyword_id'] = array(
       '#type' => 'value',
-      '#value' => $keywordId,
+      '#value' => $keyword_id,
       // Okay, following line is really ugly, but I need it for cleaner validation, otherwise, I'd have to run two optit queries.
       '#options' => $options,
     );
@@ -110,9 +110,9 @@ function optit_send_keyword($form, $form_state, $keywordId = null, $phone = null
 
 function optit_send_keyword_validate($form, &$form_state) {
   // Make sure keyword and message are less than 160 characters.
-  $keywordId = $form_state['values']['keyword_id'];
+  $keyword_id = $form_state['values']['keyword_id'];
   $message = $form_state['values']['message'];
-  $keyword = $form['keyword_id']['#options'][$keywordId];
+  $keyword = $form['keyword_id']['#options'][$keyword_id];
 
 //  // If phone number was provided, it needs to be made of 11 digits.
 //  $phone = $form_state['values']['phone'];
@@ -129,16 +129,16 @@ function optit_send_keyword_validate($form, &$form_state) {
 }
 
 function optit_send_keyword_submit($form, &$form_state) {
-  $keywordId = $form_state['values']['keyword_id'];
+  $keyword_id = $form_state['values']['keyword_id'];
   $message = $form_state['values']['message'];
   $title = $form_state['values']['title'];
 
   $optit = optit_instantiate();
   if ($form_state['values']['phone']) {
-    $success = $optit->messagePhone($form_state['values']['phone'], $keywordId, $title, $message);
+    $success = $optit->messagePhone($form_state['values']['phone'], $keyword_id, $title, $message);
   }
   else {
-    $success = $optit->messageKeyword($keywordId, $title, $message);
+    $success = $optit->messageKeyword($keyword_id, $title, $message);
   }
 
   if ($success) {
@@ -150,16 +150,16 @@ function optit_send_keyword_submit($form, &$form_state) {
 }
 
 
-function optit_send_interest($form, $form_state, $keywordId, $interestId) {
+function optit_send_interest($form, $form_state, $keyword_id, $interest_id) {
 
   $form['interest_id'] = array(
     '#type' => 'value',
-    '#value' => $interestId,
+    '#value' => $interest_id,
   );
 
   $form['keyword_id'] = array(
     '#type' => 'value',
-    '#value' => $keywordId,
+    '#value' => $keyword_id,
   );
 
   $form['title'] = array(
@@ -184,11 +184,11 @@ function optit_send_interest($form, $form_state, $keywordId, $interestId) {
 
 function optit_send_interest_validate($form, &$form_state) {
   // Make sure keyword and message are less than 160 characters.
-  $interestId = $form_state['values']['interest_id'];
+  $interest_id = $form_state['values']['interest_id'];
   $message = $form_state['values']['message'];
 
   $optit = optit_instantiate();
-  $interest = $optit->interestGet($interestId);
+  $interest = $optit->interestGet($interest_id);
 
   $length = strlen($interest->get('name') . ': ' . $message);
 
@@ -198,12 +198,12 @@ function optit_send_interest_validate($form, &$form_state) {
 }
 
 function optit_send_interest_submit($form, &$form_state) {
-  $interestId = $form_state['values']['interest_id'];
+  $interest_id = $form_state['values']['interest_id'];
   $message = $form_state['values']['message'];
   $title = $form_state['values']['title'];
 
   $optit = optit_instantiate();
-  $success = $optit->messageInterest($interestId, $title, $message);
+  $success = $optit->messageInterest($interest_id, $title, $message);
 
   if ($success) {
     drupal_set_message(t('Message was successfully sent.'));

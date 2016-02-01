@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Contains \Optit\Keyword.
+ */
 
 namespace Optit;
 
@@ -24,7 +28,7 @@ class Keyword extends Entity {
   protected $already_subscribed_msg;
 
 
-  public static function create(array $values, $skipValidation = false) {
+  public static function create(array $values, $skipValidation = FALSE) {
     $keyword = new Keyword();
     foreach ($values as $parameter => $value) {
       // No need to waste time on validation.

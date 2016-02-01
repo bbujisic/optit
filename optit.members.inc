@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Pages and forms related to members administration.
+ */
 
 /**
  * Page callback for the table with all interests for the given keyword.

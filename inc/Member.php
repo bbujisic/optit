@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Contains \Optit\Member.
+ */
 
 namespace Optit;
 
@@ -22,7 +26,7 @@ class Member extends Entity {
   protected $url;
 
 
-  public static function create(array $values, $skipValidation = false) {
+  public static function create(array $values, $skipValidation = FALSE) {
     $entity = new Member();
     foreach ($values as $parameter => $value) {
       // No need to waste time on validation.

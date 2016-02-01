@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Contains \Optit\Entity.
+ */
 
 namespace Optit;
 
@@ -8,7 +12,7 @@ abstract class Entity {
     if (method_exists($this, $method)) {
       return $this->{$method}();
     }
-    return false;
+    return FALSE;
   }
 
   public function allowedValues($parameter) {
@@ -16,7 +20,7 @@ abstract class Entity {
     if (method_exists($this, $method)) {
       return $this->{$method}();
     }
-    return false;
+    return FALSE;
   }
 
   public function set($parameter, $value) {
@@ -33,7 +37,7 @@ abstract class Entity {
     }
 
     // Allow all if validation method does not exist.
-    return true;
+    return TRUE;
   }
 
   protected function snakeToCamelCase($val) {
@@ -42,7 +46,7 @@ abstract class Entity {
 
   public function toArray() {
     $array = array();
-    foreach ($this as $key=>$value) {
+    foreach ($this as $key => $value) {
       $array[$key] = $value;
     }
     return $array;

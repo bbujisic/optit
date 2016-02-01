@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Contains \Optit.
+ */
 
 use Optit\Interest;
 use Optit\Keyword;
@@ -24,7 +28,7 @@ class Optit {
 
   // ### Keywords
   // ###
-  public function keywordsGet($params = null) {
+  public function keywordsGet($params = NULL) {
     $response = $this->http->get('keywords', $params);
 
     $keywords = array();
@@ -54,7 +58,7 @@ class Optit {
     $keyword['keyword'] = $keyword['keyword_name'];
     unset($keyword['keyword_name']);
 
-    $response = $this->http->post("keywords", null, $keyword);
+    $response = $this->http->post("keywords", NULL, $keyword);
   }
 
   /**
@@ -66,7 +70,7 @@ class Optit {
     $keyword['keyword'] = $keyword['keyword_name'];
     unset($keyword['keyword_name']);
 
-    $response = $this->http->put("keywords/{$id}", null, $keyword);
+    $response = $this->http->put("keywords/{$id}", NULL, $keyword);
   }
 
 
@@ -120,7 +124,7 @@ class Optit {
   /**
    * Create a new interest.
    */
-  public function interestCreate($keywordId, $name, $description = null) {
+  public function interestCreate($keywordId, $name, $description = NULL) {
     // @todo: Handle http request failure.
 
     // Prepare params.
@@ -131,7 +135,7 @@ class Optit {
     }
 
     // Make the request.
-    $response = $this->http->post("keywords/{$keywordId}/interests", null, $postParams);
+    $response = $this->http->post("keywords/{$keywordId}/interests", NULL, $postParams);
 
     // Return Interest object.
     return Interest::create($response['interest']);
@@ -142,22 +146,22 @@ class Optit {
    * Get a list of subsciptions for an interest.
    * http://api.optitmobile.com/1/interests/{interest_id}/subscriptions.{format}
    *
-   * @param null $phone
+   * @param NULL $phone
    *   phone - mobile phone number of the member with country code - 1 for U.S. phone numbers. Example: 12225551212
-   * @param null $memberId
+   * @param NULL $memberId
    *   member_id - the member_id of a member. It is the ID attribute in the Members entity and can be viewed using
    *   the Get Member method.
-   * @param null $firstName
+   * @param NULL $firstName
    *   first_name - first name of the member
-   * @param null $lastName
+   * @param NULL $lastName
    *   last_name - last name of the member
-   * @param null $zip
+   * @param NULL $zip
    *   zip - zip code or postal code of the member
-   * @param null $gender
+   * @param NULL $gender
    *   gender - gender of the member. Values: [male, female]
-   * @param null $signupDateStart
+   * @param NULL $signupDateStart
    *   signup_date_start - yyyymmddhhmmss
-   * @param null $signupDateEnd
+   * @param NULL $signupDateEnd
    *   signup_date_end - yyyymmddhhmmss
    *
    * @return mixed
@@ -166,7 +170,7 @@ class Optit {
    * @todo: Reduce duplication of code in interestGetSubscriptions() and subscriptionsGet()
    *
    */
-  public function interestGetSubscriptions($interestId, $phone = null, $memberId = null, $firstName = null, $lastName = null, $zip = null, $gender = null, $signupDateStart = null, $signupDateEnd = null) {
+  public function interestGetSubscriptions($interestId, $phone = NULL, $memberId = NULL, $firstName = NULL, $lastName = NULL, $zip = NULL, $gender = NULL, $signupDateStart = NULL, $signupDateEnd = NULL) {
 
     // Prepare params.
     $urlParams = array();
@@ -215,19 +219,19 @@ class Optit {
    *
    * @param int $interestId
    *   ID of the keyword
-   * @param null $phone
+   * @param NULL $phone
    *   phone - mobile phone number of the member with country code - 1 for U.S. phone numbers. (Phone or member_id is
    *   required)  Example: 12225551212
-   * @param null $memberId
+   * @param NULL $memberId
    *   member_id - the member_id of a member. It is the ID attribute in the Members entity and can be viewed using the
    *   Get Member method. (Phone or member_id is required)
    *
    * @return bool
    *   TRUE if successful request.
    */
-  public function interestSubscribe($interestId, $phone = null, $memberId = null) {
+  public function interestSubscribe($interestId, $phone = NULL, $memberId = NULL) {
     if (!$phone && !$memberId) {
-      return false;
+      return FALSE;
     }
     $postParams = array();
     if ($phone) {
@@ -237,7 +241,7 @@ class Optit {
       $postParams['member_id'] = $memberId;
     }
 
-    if ($this->http->post("interests/{$interestId}/subscriptions", null, $postParams)) {
+    if ($this->http->post("interests/{$interestId}/subscriptions", NULL, $postParams)) {
       return TRUE;
     }
     return FALSE;
@@ -272,7 +276,7 @@ class Optit {
    * Get a list of members.
    * http://api.optitmobile.com/1/members.{format}
    */
-  public function membersGet($phone = null, $firstName = null, $lastName = null, $zip = null, $gender = null) {
+  public function membersGet($phone = NULL, $firstName = NULL, $lastName = NULL, $zip = NULL, $gender = NULL) {
     // Prepare params.
     $urlParams = array();
     $urlParams['page'] = $this->getPage();
@@ -315,22 +319,22 @@ class Optit {
    *
    * @param int $keywordId
    *   ID of the keyword
-   * @param null $phone
+   * @param NULL $phone
    *   phone - mobile phone number of the member with country code - 1 for U.S. phone numbers. Example: 12225551212
-   * @param null $memberId
+   * @param NULL $memberId
    *   member_id - the member_id of a member. It is the ID attribute in the Members entity and can be viewed using
    *   the Get Member method.
-   * @param null $firstName
+   * @param NULL $firstName
    *   first_name - first name of the member
-   * @param null $lastName
+   * @param NULL $lastName
    *   last_name - last name of the member
-   * @param null $zip
+   * @param NULL $zip
    *   zip - zip code or postal code of the member
-   * @param null $gender
+   * @param NULL $gender
    *   gender - gender of the member. Values: [male, female]
-   * @param null $signupDateStart
+   * @param NULL $signupDateStart
    *   signup_date_start - yyyymmddhhmmss
-   * @param null $signupDateEnd
+   * @param NULL $signupDateEnd
    *   signup_date_end - yyyymmddhhmmss
    *
    * @return mixed
@@ -339,7 +343,7 @@ class Optit {
    * @todo: Reduce duplication with interestGetSubscriptions().
    * @todo: Rename to keywordGetSubscriptions(), standardize!!.
    */
-  public function subscriptionsGet($keywordId, $phone = null, $memberId = null, $firstName = null, $lastName = null, $zip = null, $gender = null, $signupDateStart = null, $signupDateEnd = null) {
+  public function subscriptionsGet($keywordId, $phone = NULL, $memberId = NULL, $firstName = NULL, $lastName = NULL, $zip = NULL, $gender = NULL, $signupDateStart = NULL, $signupDateEnd = NULL) {
     // Prepare params.
     $urlParams = array();
     $urlParams['page'] = $this->getPage();
@@ -404,44 +408,44 @@ class Optit {
    *
    * @param int $keywordId
    *   ID of the keyword
-   * @param null $phone
+   * @param NULL $phone
    *   phone - mobile phone number of the member with country code - 1 for U.S. phone numbers. (Phone or member_id is
    *   required)  Example: 12225551212
-   * @param null $memberId
+   * @param NULL $memberId
    *   member_id - the member_id of a member. It is the ID attribute in the Members entity and can be viewed using the
    *   Get Member method. (Phone or member_id is required)
-   * @param null $interestId
+   * @param NULL $interestId
    *   interest_id - add this user to one or many interests. For multiple interests, please comma separate the
    *   interest_ids. It is the ID attribute in the Interest entity and can be viewed using the Get Interest method.
-   * @param null $firstName
+   * @param NULL $firstName
    *   first_name - first name of the member
-   * @param null $lastName
+   * @param NULL $lastName
    *   last_name - last name of the member
-   * @param null $address1
+   * @param NULL $address1
    *   address1 - address line 1 of the member
-   * @param null $address2
+   * @param NULL $address2
    *   address2 - address line 2 of the member
-   * @param null $city
+   * @param NULL $city
    *   city - city of the member
-   * @param null $state
+   * @param NULL $state
    *   state - state of the member as a two character abbreviation
-   * @param null $zip
+   * @param NULL $zip
    *   zip - zip code or postal code of the member
-   * @param null $gender
+   * @param NULL $gender
    *   gender - gender of the member. Values: [male, female]
-   * @param null $birthDate
+   * @param NULL $birthDate
    *   birth_date - birthdate in the format yyyymmdd
-   * @param null $emailAddress
+   * @param NULL $emailAddress
    *   email_address - email address of the member
    *
    * @return bool|Subscription
-   *   false if request did not succeed. Otherwise - Subscription object.
+   *   FALSE if request did not succeed. Otherwise - Subscription object.
    */
-  public function subscriptionCreate($keywordId, $phone = null, $memberId = null, $interestId = null, $firstName = null, $lastName = null, $address1 = null, $address2 = null, $city = null, $state = null, $zip = null, $gender = null, $birthDate = null, $emailAddress = null) {
+  public function subscriptionCreate($keywordId, $phone = NULL, $memberId = NULL, $interestId = NULL, $firstName = NULL, $lastName = NULL, $address1 = NULL, $address2 = NULL, $city = NULL, $state = NULL, $zip = NULL, $gender = NULL, $birthDate = NULL, $emailAddress = NULL) {
 
     // Validation step.
     if (!$phone && !$memberId) {
-      return false;
+      return FALSE;
     }
 
     // Preparing params.
@@ -486,10 +490,10 @@ class Optit {
       $postParams['email_address'] = $emailAddress;
     }
 
-    if ($response = $this->http->post("keywords/{$keywordId}/subscriptions", null, $postParams)) {
+    if ($response = $this->http->post("keywords/{$keywordId}/subscriptions", NULL, $postParams)) {
       return new Subscription($postParams);
     }
-    return false;
+    return FALSE;
   }
 
   /**
@@ -548,7 +552,7 @@ class Optit {
     $postParams['keyword_id'] = $keywordId;
     $postParams['title'] = $title;
     $postParams['message'] = $message;
-    if ($response = $this->http->post("sendmessage", null, $postParams)) {
+    if ($response = $this->http->post("sendmessage", NULL, $postParams)) {
       return TRUE;
     }
     return FALSE;
@@ -573,7 +577,7 @@ class Optit {
     $postParams['keyword_id'] = $keywordId;
     $postParams['title'] = $title;
     $postParams['message'] = $message;
-    if ($response = $this->http->post("sendmessage/keywords", null, $postParams)) {
+    if ($response = $this->http->post("sendmessage/keywords", NULL, $postParams)) {
       return TRUE;
     }
     return FALSE;
@@ -598,7 +602,7 @@ class Optit {
     $postParams['interest_id'] = $interestId;
     $postParams['title'] = $title;
     $postParams['message'] = $message;
-    if ($response = $this->http->post("sendmessage/interests", null, $postParams)) {
+    if ($response = $this->http->post("sendmessage/interests", NULL, $postParams)) {
       return TRUE;
     }
     return FALSE;
@@ -638,7 +642,7 @@ class Optit {
     $options = array('headers' => array('Content-Type' => 'text/xml'));
 
     // Talk to the API.
-    if ($response = $this->http->post("sendmessage/bulk", null, $postParams, $options)) {
+    if ($response = $this->http->post("sendmessage/bulk", NULL, $postParams, $options)) {
       return TRUE;
     }
     return FALSE;

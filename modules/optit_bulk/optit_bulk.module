@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Implementation of hook_menu().
+ * Implements hook_menu().
  */
 function optit_bulk_menu() {
 
@@ -43,8 +43,8 @@ function optit_bulk_list($form, $form_state) {
   );
 
   // Iterate through keywords in bulk.
-  foreach ($_SESSION['optit_bulk'] as $keywordId => $messages) {
-    $keyword = $optit->keywordGet($keywordId);
+  foreach ($_SESSION['optit_bulk'] as $keyword_id => $messages) {
+    $keyword = $optit->keywordGet($keyword_id);
     $keywordName = $keyword->get('keyword_name');
     // Iterate through messages in a keyword.
     foreach ($messages as $message) {
@@ -84,7 +84,7 @@ function optit_bulk_messages_submit($form, &$form_state) {
   $optit = optit_instantiate();
   $success = $optit->messageBulkArray($_SESSION['optit_bulk']);
 
-  if($success) {
+  if ($success) {
     drupal_set_message(t('Bulk messages were sent successfully.'));
     optit_bulk_messages_clear($form, $form_state);
   }
@@ -101,7 +101,7 @@ function optit_bulk_messages_clear($form, &$form_state) {
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Implements hook_form_alter().
  */
 function optit_bulk_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'optit_send_keyword') {

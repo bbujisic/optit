@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Contains \Optit\RESTclient.
+ */
 
 namespace Optit;
 
@@ -15,24 +19,24 @@ class RESTclient {
     $this->apiEndpoint = $apiEndpoint;
   }
 
-  public function get($route, $urlParams = null, $postParams = null, $format = 'json') {
+  public function get($route, $urlParams = NULL, $postParams = NULL, $format = 'json') {
     return $this->drupalHTTPNightmare($route, 'GET', $urlParams, $postParams, $format);
   }
 
-  public function post($route, $urlParams = null, $postParams = null, $options = array(), $format = 'json') {
+  public function post($route, $urlParams = NULL, $postParams = NULL, $options = array(), $format = 'json') {
     return $this->drupalHTTPNightmare($route, 'POST', $urlParams, $postParams, $format, $options);
   }
 
-  public function put($route, $urlParams = null, $postParams = null, $format = 'json') {
+  public function put($route, $urlParams = NULL, $postParams = NULL, $format = 'json') {
     return $this->drupalHTTPNightmare($route, 'PUT', $urlParams, $postParams, $format);
   }
 
-  public function delete($route, $urlParams = null, $postParams = null, $format = 'json') {
+  public function delete($route, $urlParams = NULL, $postParams = NULL, $format = 'json') {
     return $this->drupalHTTPNightmare($route, 'DELETE', $urlParams, $postParams, $format);
   }
 
 
-  private function drupalHTTPNightmare($route, $method = 'GET', $urlParams = null, $postParams = null, $format = 'json', $options = array()) {
+  private function drupalHTTPNightmare($route, $method = 'GET', $urlParams = NULL, $postParams = NULL, $format = 'json', $options = array()) {
     $url = "http://{$this->username}:{$this->password}@{$this->apiEndpoint}/{$route}.{$format}";
 
     $options['method'] = $method;
@@ -68,9 +72,9 @@ class RESTclient {
       case "json":
         // Due to fact that some callbacks return broken json documents, i need to handle situation where response is 200, but
         // details are broken.
-        $decoded = json_decode($data, true);
-        if ($decoded === null) {
-          return true;
+        $decoded = json_decode($data, TRUE);
+        if ($decoded === NULL) {
+          return TRUE;
         }
         return $decoded;
       case "xml":
@@ -78,11 +82,11 @@ class RESTclient {
         return XML2Array::createArray($data);
         break;
     }
-    return true;
+    return TRUE;
   }
 
   private function handleError($response) {
     dsm($response);
-    return false;
+    return FALSE;
   }
 }

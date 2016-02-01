@@ -4,7 +4,7 @@ define('OPTIT_URL', 'api.optitmobile.com/1');
 
 
 /**
- * Implementation of hook_help().
+ * Implements hook_help().
  */
 function optit_help($path, $arg) {
   switch ($path) {
@@ -27,7 +27,7 @@ function optit_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_permission().
+ * Implements hook_permission().
  */
 function optit_permission() {
   return array(
@@ -56,7 +56,7 @@ function optit_permission() {
 
 
 /**
- * Implementation of hook_menu().
+ * Implements hook_menu().
  */
 function optit_menu() {
 
@@ -252,17 +252,6 @@ function optit_menu() {
   );
 
   return $items;
-}
-
-
-function optit_dev() {
-  $optit = optit_instantiate();
-
-  //$data = $optit->subscriptionCreate(20455, '11115552222');
-  $data = $optit->subscriptionCreate(20455, null, 25781345, '70529,70533', 'Let me try to change name', 'MyFancyLastName', 'Address1', 'Address2', 'Belgrade', 'MO', '26000', 'male', '20150101', 'b@example.com');
-
-  dsm($data->toArray());
-  return 'bla';
 }
 
 

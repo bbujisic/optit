@@ -1,7 +1,7 @@
 <?php
-
 /**
- * @todo: Redevelop this file massively, using optit.interests or optit.subscriptions as role model.
+ * @file
+ * Pages and forms related to keywords administration.
  */
 
 /**
@@ -81,7 +81,7 @@ function optit_keywords_page() {
  * @return array
  * @throws Exception
  */
-function optit_keyword_edit_form($form, $form_state, $id = false) {
+function optit_keyword_edit_form($form, $form_state, $id = FALSE) {
   $optit = optit_instantiate();
 
   $form = array();
@@ -155,7 +155,7 @@ function optit_keyword_edit_form_validate($form, &$form_state) {
   $keyword_exists = $optit->keywordExists($form_state['input']['keyword_name']);
 
   if (!$form['#keyword_id'] && $keyword_exists) {
-    $form_state['error'] = true;
+    $form_state['error'] = TRUE;
     form_set_error('keyword_name', t('Name must be unique. Keyword with name :name already exists.', array(':name' => $form_state['values']['keyword_name'])));
   }
 
@@ -184,9 +184,9 @@ function optit_keyword_edit_form_submit($form, &$form_state) {
 }
 
 
-function optit_keyword_message_form($form, $form_state, $keywordId) {
+function optit_keyword_message_form($form, $form_state, $keyword_id) {
   $form['keyword_id'] = array(
-    '#value' => $keywordId,
+    '#value' => $keyword_id,
     '#type' => 'value'
   );
 
