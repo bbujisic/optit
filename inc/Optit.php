@@ -604,6 +604,46 @@ class Optit {
     return FALSE;
   }
 
+  /**
+   * Opt It SMS Bulk Send Message.
+   * http://api.optitmobile.com/1/sendmessage/bulk.{format}
+   *
+   * @param array $array
+   *   Array of all keywords, with a sub-array of all messages, with a sub-sub-array of keywords associated to these
+   *   messages. It is a mess. @todo: Create a bulk messaging method which accepts Message objects and handles the rest.
+   *
+   * @return bool
+   */
+  public function messageBulkArray($array) {
+    // Prepare XML document.
+    $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><keywords/>');
+    foreach ($array as $keywordId => $messages) {
+      $keywordObj = $xml->addChild('keyword');
+      $keywordObj->addAttribute('id', $keywordId);
+      $messagesObj = $keywordObj->addChild('messages');
+      foreach ($messages as $message) {
+        $messageObj = $messagesObj->addChild('message');
+        $messageObj->addAttribute('title', $message['title']);
+        $messageObj->addAttribute('text', $message['message']);
+        $recipientsObj = $messageObj->addChild('recipients');
+        foreach ($message['phones'] as $phone) {
+          $recipientsObj->addChild('phone', $phone);
+        }
+      }
+    }
+
+    // Prepare a request.
+    $postParams = array();
+    $postParams['data'] = $xml->asXML();
+    $options = array('headers' => array('Content-Type' => 'text/xml'));
+
+    // Talk to the API.
+    if ($response = $this->http->post("sendmessage/bulk", null, $postParams, $options)) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
 
   public function setPage($page) {
     $this->page = $page;

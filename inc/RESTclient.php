@@ -19,8 +19,8 @@ class RESTclient {
     return $this->drupalHTTPNightmare($route, 'GET', $urlParams, $postParams, $format);
   }
 
-  public function post($route, $urlParams = null, $postParams = null, $format = 'json') {
-    return $this->drupalHTTPNightmare($route, 'POST', $urlParams, $postParams, $format);
+  public function post($route, $urlParams = null, $postParams = null, $options = array(), $format = 'json') {
+    return $this->drupalHTTPNightmare($route, 'POST', $urlParams, $postParams, $format, $options);
   }
 
   public function put($route, $urlParams = null, $postParams = null, $format = 'json') {
@@ -66,13 +66,19 @@ class RESTclient {
   private function decodeData($data, $format) {
     switch ($format) {
       case "json":
-        return json_decode($data, true);
+        // Due to fact that some callbacks return broken json documents, i need to handle situation where response is 200, but
+        // details are broken.
+        $decoded = json_decode($data, true);
+        if ($decoded === null) {
+          return true;
+        }
+        return $decoded;
       case "xml":
         // @todo: Another relic od D7. It is difficult to inject the dependency in Drupal 7...
         return XML2Array::createArray($data);
         break;
     }
-    return false;
+    return true;
   }
 
   private function handleError($response) {

@@ -1,0 +1,7 @@
+name = Opt It Mobile: Bulk actions
+description = "The module expands Opt It functionality with bulk container which allows combining multiple messages into single request."
+package = Opt It
+core = 7.x
+
+dependencies[] = optit
+dependencies[] = optit_send

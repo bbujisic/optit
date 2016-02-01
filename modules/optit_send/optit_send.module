@@ -27,7 +27,7 @@ function optit_send_menu() {
 
   $items['admin/structure/optit/keywords/%/subscriptions/message'] = array(
     'title' => 'Send message',
-    'description' => 'Send message to keyword subscribers.',
+    'description' => 'Send message to all keyword subscribers.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('optit_send_keyword', 4),
     'access arguments' => array('optit send message'),
