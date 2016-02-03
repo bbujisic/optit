@@ -583,6 +583,34 @@ class Optit {
     return FALSE;
   }
 
+  /**
+   * Send an MMS message to all users subscribed to a given keyword
+   * http://api.optitmobile.com/1/sendmms/keywords.{format}
+   *
+   * @param int $keywordId
+   *   ID of the keyword
+   * @param string $title
+   *   Title of the message
+   * @param string $message
+   *   Message to be set to subscribers
+   * @param string $contentUrl
+   *   URL to the multimedia entity (image, video, audio)
+   *
+   * @return bool
+   */
+  public function messageKeywordMMS($keywordId, $title, $message, $contentUrl = NULL) {
+    $postParams = array();
+    $postParams['keyword_id'] = $keywordId;
+    $postParams['title'] = $title;
+    $postParams['message'] = $message;
+    $postParams['content_url'] = $contentUrl;
+
+    if ($response = $this->http->post("sendmms/keywords", NULL, $postParams)) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
 
   /**
    * Send a message to all users subscribed to a given keyword
