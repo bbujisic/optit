@@ -42,11 +42,20 @@ function optit_send_menu() {
     'access arguments' => array('optit send message'),
   );
 
-  $items['admin/structure/optit/keywords/%/subscriptions/message'] = array(
-    'title' => 'Send message',
-    'description' => 'Send message to all keyword subscribers.',
+  $items['admin/structure/optit/keywords/%/subscriptions/sms'] = array(
+    'title' => 'Send SMS',
+    'description' => 'Send SMS to all keyword subscribers.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('optit_send_keyword', 4),
+    'access arguments' => array('optit send message'),
+    'type' => MENU_LOCAL_ACTION,
+  );
+
+  $items['admin/structure/optit/keywords/%/subscriptions/mms'] = array(
+    'title' => 'Send SMS',
+    'description' => 'Send MMS to all keyword subscribers.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('optit_send_keyword_mms', 4),
     'access arguments' => array('optit send message'),
     'type' => MENU_LOCAL_ACTION,
   );
@@ -135,7 +144,7 @@ function optit_send_keyword_mms($form, $form_state, $keyword_id = NULL, $phone =
     '#weight' => 9
   );
 
-  $form += optit_send_keyword($form, $form_state, $keyword_id = NULL, $phone = NULL);
+  $form += optit_send_keyword($form, $form_state, $keyword_id, $phone);
 
   return $form;
 }
@@ -223,7 +232,7 @@ function optit_send_keyword_mms_submit($form, &$form_state) {
     drupal_set_message(t('Message was successfully sent.'));
   }
   else {
-    drupal_set_message(t('The message could not be sent. Please consult error log for details.', 'error'));
+    drupal_set_message(t('The message could not be sent. Please consult error log for details.'), 'error');
   }
 }
 

@@ -605,6 +605,8 @@ class Optit {
     $postParams['message'] = $message;
     $postParams['content_url'] = $contentUrl;
 
+    dsm($postParams); return;
+
     if ($response = $this->http->post("sendmms/keywords", NULL, $postParams)) {
       return TRUE;
     }

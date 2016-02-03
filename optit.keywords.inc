@@ -50,8 +50,12 @@ function optit_keywords_page() {
     );
     if (module_exists('optit_send')) {
       $actions[] = array(
-        'title' => t('Send message'),
-        'href' => "admin/structure/optit/keywords/{$keyword->get('id')}/subscriptions/message"
+        'title' => t('Send SMS'),
+        'href' => "admin/structure/optit/keywords/{$keyword->get('id')}/subscriptions/sms"
+      );
+      $actions[] = array(
+        'title' => t('Send MMS'),
+        'href' => "admin/structure/optit/keywords/{$keyword->get('id')}/subscriptions/mms"
       );
     }
 
