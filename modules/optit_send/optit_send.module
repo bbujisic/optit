@@ -52,7 +52,7 @@ function optit_send_menu() {
   );
 
   $items['admin/structure/optit/keywords/%/subscriptions/mms'] = array(
-    'title' => 'Send SMS',
+    'title' => 'Send MMS',
     'description' => 'Send MMS to all keyword subscribers.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('optit_send_keyword_mms', 4),
