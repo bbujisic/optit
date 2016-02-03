@@ -29,7 +29,16 @@ class Optit {
   // ### Keywords
   // ###
   public function keywordsGet($params = NULL) {
-    $response = $this->http->get('keywords', $params);
+    if ($params) {
+      $urlParams = $params;
+    }
+    else {
+      $urlParams = array();
+    }
+    $urlParams['page'] = $this->getPage();
+
+    $response = $this->http->get('keywords', $urlParams);
+    $this->collectStats($response);
 
     $keywords = array();
     foreach ($response['keywords'] as $keyword) {

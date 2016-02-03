@@ -12,10 +12,15 @@
  * @throws Exception
  */
 function optit_keywords_page() {
-
   // Initiate bridge class and dependencies and get the list of keywords from the API.
   $optit = optit_instantiate();
-  $keywords = $optit->keywordsGet();
+
+  // Decide page
+  $page = (isset($_GET['page']) ? $_GET['page'] + 1 : 1);
+
+  // Run query against the API.
+  $keywords = $optit->setPage($page)
+    ->keywordsGet();
 
   // Start building vars for theme_table.
   $vars = array(
@@ -66,7 +71,9 @@ function optit_keywords_page() {
     );
   }
 
-  return theme('table', $vars);
+  // Initialize the pager
+  pager_default_initialize($optit->totalPages, 1);
+  return theme('table', $vars) . theme('pager', array('quantity' => $optit->totalPages));
 }
 
 
