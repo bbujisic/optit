@@ -8,9 +8,6 @@ define('OPTIT_URL', 'api.optitmobile.com/1');
  */
 function optit_help($path, $arg) {
   switch ($path) {
-    case "admin/structure/optit/message":
-      return "<p>" . t("Send a text message to the subscribed members of a keyword.") . "</p>";
-      break;
     case "admin/structure/optit/members":
       return "<p>" . t("This is an Opt It membership administration page. You can find a member here and unsubscribe them from all keywords.") . "</p>";
       break;

@@ -6,7 +6,7 @@
  */
 function optit_send_help($path, $arg) {
   switch ($path) {
-    case "admin/structure/optit/message":
+    case "admin/structure/optit/send/sms":
       return "<p>" . t("Send a text message to the subscribed members of a keyword.") . "</p>";
       break;
   }
@@ -17,19 +17,45 @@ function optit_send_help($path, $arg) {
  */
 function optit_send_menu() {
 
-  $items['admin/structure/optit/message'] = array(
+  $items['admin/structure/optit/send'] = array(
     'title' => 'Send message',
-    'description' => 'Choose a keyword and send a message.',
+    'description' => 'Send messages to your subscribers.',
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+
+  $items['admin/structure/optit/send/sms'] = array(
+    'title' => 'SMS',
+    'description' => 'Choose a keyword and send an SMS.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('optit_send_keyword'),
     'access arguments' => array('optit send message'),
   );
 
-  $items['admin/structure/optit/keywords/%/subscriptions/message'] = array(
-    'title' => 'Send message',
-    'description' => 'Send message to all keyword subscribers.',
+  $items['admin/structure/optit/send/mms'] = array(
+    'title' => 'MMS',
+    'description' => 'Choose a keyword and send an MMS.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('optit_send_keyword_mms'),
+    'access arguments' => array('optit send message'),
+  );
+
+  $items['admin/structure/optit/keywords/%/subscriptions/sms'] = array(
+    'title' => 'Send SMS',
+    'description' => 'Send SMS to all keyword subscribers.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('optit_send_keyword', 4),
+    'access arguments' => array('optit send message'),
+    'type' => MENU_LOCAL_ACTION,
+  );
+
+  $items['admin/structure/optit/keywords/%/subscriptions/mms'] = array(
+    'title' => 'Send MMS',
+    'description' => 'Send MMS to all keyword subscribers.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('optit_send_keyword_mms', 4),
     'access arguments' => array('optit send message'),
     'type' => MENU_LOCAL_ACTION,
   );
@@ -104,7 +130,22 @@ function optit_send_keyword($form, $form_state, $keyword_id = NULL, $phone = NUL
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Submit'),
+    '#weight' => 10,
   );
+  return $form;
+}
+
+function optit_send_keyword_mms($form, $form_state, $keyword_id = NULL, $phone = NULL) {
+  $form['media'] = array(
+    '#type' => 'file',
+    '#title' => t('Media file'),
+    '#name' => 'files[media]',
+    '#description' => t('Upload a media file to be sent with MMS. Allowed extensions: jpg, jpeg, png, gif, vnd, wap, wbpm, bpm, amr, x-wav, aac, qcp, 3gpp, 3gpp2'),
+    '#weight' => 9
+  );
+
+  $form += optit_send_keyword($form, $form_state, $keyword_id, $phone);
+
   return $form;
 }
 
@@ -146,6 +187,52 @@ function optit_send_keyword_submit($form, &$form_state) {
   }
   else {
     drupal_set_message(t('The message could not be sent. Please consult error log for details.', 'error'));
+  }
+}
+
+
+function optit_send_keyword_mms_validate($form, &$form_state) {
+
+  $validators = array(
+    'file_validate_extensions' => array('jpg jpeg png gif vnd wap wbpm bpm amr x-wav aac qcp 3gpp 3gpp2'),
+  );
+
+  // Save temporary file.
+  $file = file_save_upload('media', $validators);
+
+  // If file was saved, move it to public folder.
+  if ($file) {
+    // Make sure public folder exists and is writable.
+    $dir = 'public://optit';
+    if (!file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
+      drupal_mkdir($dir);
+    }
+    if ($file = file_move($file, "{$dir}/{$file->filename}")) {
+      $form_state['values']['media'] = $file;
+    }
+    else {
+      form_set_error('media', t('Failed to write the uploaded file the file folder.'));
+    }
+  }
+}
+
+function optit_send_keyword_mms_submit($form, &$form_state) {
+  $keyword_id = $form_state['values']['keyword_id'];
+  $title = $form_state['values']['title'];
+  $message = $form_state['values']['message'];
+  $content_url = NULL;
+  if($form_state['values']['media']) {
+    $content_url = file_create_url($form_state['values']['media']->uri);
+  }
+
+  $optit = optit_instantiate();
+  $success = $optit->messageKeywordMMS($keyword_id, $title, $message, $content_url);
+
+  if ($success) {
+    drupal_set_message(t('Message was successfully sent.'));
+  }
+  else {
+    drupal_set_message(t('The message could not be sent. Please consult error log for details.'), 'error');
   }
 }
 

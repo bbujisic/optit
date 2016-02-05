@@ -592,6 +592,34 @@ class Optit {
     return FALSE;
   }
 
+  /**
+   * Send an MMS message to all users subscribed to a given keyword
+   * http://api.optitmobile.com/1/sendmms/keywords.{format}
+   *
+   * @param int $keywordId
+   *   ID of the keyword
+   * @param string $title
+   *   Title of the message
+   * @param string $message
+   *   Message to be set to subscribers
+   * @param string $contentUrl
+   *   URL to the multimedia entity (image, video, audio)
+   *
+   * @return bool
+   */
+  public function messageKeywordMMS($keywordId, $title, $message, $contentUrl = NULL) {
+    $postParams = array();
+    $postParams['keyword_id'] = $keywordId;
+    $postParams['title'] = $title;
+    $postParams['message'] = $message;
+    $postParams['content_url'] = $contentUrl;
+
+    if ($response = $this->http->post("sendmms/keywords", NULL, $postParams)) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
 
   /**
    * Send a message to all users subscribed to a given keyword
@@ -652,6 +680,40 @@ class Optit {
 
     // Talk to the API.
     if ($response = $this->http->post("sendmessage/bulk", NULL, $postParams, $options)) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+
+  public function messageBulkMMSArray($array) {
+    // Prepare XML document.
+    $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><keywords/>');
+    foreach ($array as $keywordId => $messages) {
+      $keywordObj = $xml->addChild('keyword');
+      $keywordObj->addAttribute('id', $keywordId);
+      $messagesObj = $keywordObj->addChild('messages');
+      foreach ($messages as $message) {
+        $messageObj = $messagesObj->addChild('message');
+        $messageObj->addAttribute('title', $message['title']);
+        $messageObj->addAttribute('text', $message['message']);
+        if($message['content_url']) {
+          $messageObj->addAttribute('content_url', $message['content_url']);
+        }
+        $recipientsObj = $messageObj->addChild('recipients');
+        foreach ($message['phones'] as $phone) {
+          $recipientsObj->addChild('phone', $phone);
+        }
+      }
+    }
+
+    // Prepare a request.
+    $postParams = array();
+    $postParams['data'] = $xml->asXML();
+    $options = array('headers' => array('Content-Type' => 'text/xml'));
+
+    // Talk to the API.
+    if ($response = $this->http->post("sendmessage/mms/bulk", NULL, $postParams, $options)) {
       return TRUE;
     }
     return FALSE;
