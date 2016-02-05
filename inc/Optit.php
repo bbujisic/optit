@@ -605,8 +605,6 @@ class Optit {
     $postParams['message'] = $message;
     $postParams['content_url'] = $contentUrl;
 
-    dsm($postParams); return;
-
     if ($response = $this->http->post("sendmms/keywords", NULL, $postParams)) {
       return TRUE;
     }
@@ -673,6 +671,40 @@ class Optit {
 
     // Talk to the API.
     if ($response = $this->http->post("sendmessage/bulk", NULL, $postParams, $options)) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+
+  public function messageBulkMMSArray($array) {
+    // Prepare XML document.
+    $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><keywords/>');
+    foreach ($array as $keywordId => $messages) {
+      $keywordObj = $xml->addChild('keyword');
+      $keywordObj->addAttribute('id', $keywordId);
+      $messagesObj = $keywordObj->addChild('messages');
+      foreach ($messages as $message) {
+        $messageObj = $messagesObj->addChild('message');
+        $messageObj->addAttribute('title', $message['title']);
+        $messageObj->addAttribute('text', $message['message']);
+        if($message['content_url']) {
+          $messageObj->addAttribute('content_url', $message['content_url']);
+        }
+        $recipientsObj = $messageObj->addChild('recipients');
+        foreach ($message['phones'] as $phone) {
+          $recipientsObj->addChild('phone', $phone);
+        }
+      }
+    }
+
+    // Prepare a request.
+    $postParams = array();
+    $postParams['data'] = $xml->asXML();
+    $options = array('headers' => array('Content-Type' => 'text/xml'));
+
+    // Talk to the API.
+    if ($response = $this->http->post("sendmessage/mms/bulk", NULL, $postParams, $options)) {
       return TRUE;
     }
     return FALSE;
