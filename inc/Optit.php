@@ -28,6 +28,19 @@ class Optit {
 
   // ### Keywords
   // ###
+
+  /**
+   * Load a list of all keywords.
+   * http://api.optitmobile.com/1/keywords.{format}
+   *
+   * @todo: replace this array with individual params.
+   *
+   * @param array $params
+   *   Array of all params.
+   *
+   * @return array
+   *   Array of all keyword entities.
+   */
   public function keywordsGet($params = NULL) {
     if ($params) {
       $urlParams = $params;
@@ -48,11 +61,31 @@ class Optit {
     return $keywords;
   }
 
-  public function keywordGet($id) {
-    $response = $this->http->get("keywords/{$id}");
+  /**
+   * Load a single keyword entity.
+   * http://api.optitmobile.com/1/keywords.{format}
+   *
+   * @param int $keywordId
+   *   ID of the keyword.
+   *
+   * @return Keyword
+   *   Keyword entity.
+   */
+  public function keywordGet($keywordId) {
+    $response = $this->http->get("keywords/{$keywordId}");
     return Keyword::create($response['keyword']);
   }
 
+  /**
+   * Check if keyword with a given name already exists.
+   * http://api.optitmobile.com/1/keyword/exists.{format}
+   *
+   * @param int $name
+   *   Name of the keyword.
+   *
+   * @return bool
+   *   TRUE if keyword exists.
+   */
   public function keywordExists($name) {
     $urlParams = array();
     $urlParams['keyword'] = $name;
@@ -62,24 +95,49 @@ class Optit {
     return $response['keyword']['exists'];
   }
 
+  /**
+   * Save a new keyword.
+   * POST http://api.optitmobile.com/1/keywords.{format}
+   *
+   * @param Keyword $keyword
+   *   Keyword entity.
+   *
+   * @return bool
+   *   TRUE if successful.
+   */
   public function keywordCreate(Keyword $keyword) {
     $keyword = $keyword->toArray();
     $keyword['keyword'] = $keyword['keyword_name'];
     unset($keyword['keyword_name']);
 
     $response = $this->http->post("keywords", NULL, $keyword);
+
+    return $response;
   }
 
   /**
-   * @todo: This call does not work, probably due to API server error!
+   * Update an existing keyword.
+   * PUT http://api.optitmobile.com/1/keywords/{keyword_id}.{format}
+   *
+   * @todo: This call does not work yet due to API server error. Recheck after fix.
+   *
+   * @param int $keywordId
+   *   The ID of the keyword.
+   * @param Keyword $keyword
+   *   Keyword entity (with updated values).
+   *
+   * @return bool
+   *   TRUE if successful.
    */
-  public function keywordUpdate($id, Keyword $keyword) {
+  public function keywordUpdate($keywordId, Keyword $keyword) {
     // Prepare new keyword for being saved
     $keyword = $keyword->toArray();
     $keyword['keyword'] = $keyword['keyword_name'];
     unset($keyword['keyword_name']);
 
-    $response = $this->http->put("keywords/{$id}", NULL, $keyword);
+    $response = $this->http->put("keywords/{$keywordId}", NULL, $keyword);
+
+    return $response;
   }
 
 
@@ -88,7 +146,16 @@ class Optit {
   //
 
   /**
-   * Get a list of interests
+   * Get a list of interests for a given keyword.
+   * http://api.optitmobile.com/1/keywords/{keyword_id}/interests.{format}
+   *
+   * @param int $keywordId
+   *   The ID of the keyword.
+   * @param string $name
+   *   Name of the interest.
+   *
+   * @return array
+   *   Array of all Interest entities.
    */
   public function interestsGet($keywordId, $name = NULL) {
     $urlParams = array();
@@ -109,6 +176,15 @@ class Optit {
 
   /**
    * Get a list of interests filtered by phone number.
+   * http://api.optitmobile.com/1/keywords/{keyword_id}/subscriptions/{phone}/interests.{format}
+   *
+   * @param int $keywordId
+   *   The ID of the keyword.
+   * @param string $phone
+   *   Phone number.
+   *
+   * @return array
+   *   Array of all Interest entities.
    */
   public function interestsGetByPhone($keywordId, $phone) {
     $response = $this->http->get("keywords/{$keywordId}/subscriptions/{$phone}/interests");
@@ -123,6 +199,13 @@ class Optit {
 
   /**
    * Get an individual interest.
+   * http://api.optitmobile.com/1/interests/{interest_id}.{format}
+   *
+   * @param int $interestId
+   *   The ID of the interest.
+   *
+   * @return Interest
+   *   An Interest entity.
    */
   public function interestGet($interestId) {
     $response = $this->http->get("interests/{$interestId}");
@@ -697,7 +780,7 @@ class Optit {
         $messageObj = $messagesObj->addChild('message');
         $messageObj->addAttribute('title', $message['title']);
         $messageObj->addAttribute('text', $message['message']);
-        if($message['content_url']) {
+        if ($message['content_url']) {
           $messageObj->addAttribute('content_url', $message['content_url']);
         }
         $recipientsObj = $messageObj->addChild('recipients');
