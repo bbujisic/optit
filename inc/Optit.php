@@ -464,17 +464,17 @@ class Optit {
       $urlParams['signup_date_end'] = $signupDateEnd;
     }
 
-    $response = $this->http->get("keywords/{$keywordId}/subscriptions", $urlParams);
-    $this->collectStats($response);
-
-    $subscriptions = array();
-    foreach ($response['subscriptions'] as $record) {
-      $subscriptions[] = Subscription::create($record['subscription']);
+    if ($response = $this->http->get("keywords/{$keywordId}/subscriptions", $urlParams)) {
+      $this->collectStats($response);
+      $subscriptions = array();
+      foreach ($response['subscriptions'] as $record) {
+        $subscriptions[] = Subscription::create($record['subscription']);
+      }
+      $this->totalPages = $response['total_pages'];
+      return $subscriptions;
     }
 
-    $this->totalPages = $response['total_pages'];
-
-    return $subscriptions;
+    return FALSE;
   }
 
   /**
@@ -486,12 +486,15 @@ class Optit {
    * @param $phone
    *   phone - mobile phone number of the member with country code - 1 for U.S. phone numbers. Example: 12225551212
    *
-   * @return Subscription
+   * @return Subscription object or FALSE if subscription was not present.
+   *
    */
   public function subscriptionGetByPhone($keywordId, $phone) {
-    $response = $this->http->get("keywords/{$keywordId}/subscriptions/{$phone}");
-    //dsm($response);
-    return Subscription::create($response['subscription']);
+    if ($response = $this->http->get("keywords/{$keywordId}/subscriptions/{$phone}")) {
+      return Subscription::create($response['subscription']);
+    }
+
+    return FALSE;
   }
 
   /**
