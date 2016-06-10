@@ -62,7 +62,7 @@ class RESTclient {
   private function mergeParams($params) {
     $param = array();
     foreach ($params as $key => $value) {
-      $param[] = $key . '=' . $value;
+      $param[] = $key . '=' . urlencode($value);
     }
     return implode('&', $param);
   }
