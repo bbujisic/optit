@@ -2,4 +2,4 @@ name = Opt It Mobile: Core
 description = "Provides integration with Opt It text message marketing application."
 package = Opt It
 core = 7.x
-; configure = admin/config/administration/admin_menu
+configure = admin/config/services/optit
