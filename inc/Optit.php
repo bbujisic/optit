@@ -54,8 +54,10 @@ class Optit {
     $this->collectStats($response);
 
     $keywords = array();
-    foreach ($response['keywords'] as $keyword) {
-      $keywords[] = Keyword::create($keyword['keyword']);
+    if (!empty($response['keywords'])) {
+      foreach ($response['keywords'] as $keyword) {
+        $keywords[] = Keyword::create($keyword['keyword']);
+      }
     }
 
     return $keywords;
@@ -167,8 +169,10 @@ class Optit {
     $response = $this->http->get("keywords/{$keywordId}/interests", $urlParams);
 
     $interests = array();
-    foreach ($response['interests'] as $i) {
-      $interests[] = Interest::create($i['interest']);
+    if (!empty($response['interests'])) {
+      foreach ($response['interests'] as $i) {
+        $interests[] = Interest::create($i['interest']);
+      }
     }
 
     return $interests;
@@ -190,8 +194,10 @@ class Optit {
     $response = $this->http->get("keywords/{$keywordId}/subscriptions/{$phone}/interests");
 
     $interests = array();
-    foreach ($response['interests'] as $i) {
-      $interests[] = Interest::create($i['interest']);
+    if (!empty($response['interests'])) {
+      foreach ($response['interests'] as $i) {
+        $interests[] = Interest::create($i['interest']);
+      }
     }
 
     return $interests;
@@ -392,8 +398,10 @@ class Optit {
     $this->collectStats($response);
 
     $members = array();
-    foreach ($response['members'] as $record) {
-      $members[] = Member::create($record['member']);
+    if (!empty($response['members'])) {
+      foreach ($response['members'] as $record) {
+        $members[] = Member::create($record['member']);
+      }
     }
 
     $this->totalPages = $response['total_pages'];
@@ -467,8 +475,10 @@ class Optit {
     if ($response = $this->http->get("keywords/{$keywordId}/subscriptions", $urlParams)) {
       $this->collectStats($response);
       $subscriptions = array();
-      foreach ($response['subscriptions'] as $record) {
-        $subscriptions[] = Subscription::create($record['subscription']);
+      if (!empty($response['subscriptions'])) {
+        foreach ($response['subscriptions'] as $record) {
+          $subscriptions[] = Subscription::create($record['subscription']);
+        }
       }
       $this->totalPages = $response['total_pages'];
       return $subscriptions;
