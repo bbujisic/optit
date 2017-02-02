@@ -448,6 +448,10 @@ class Optit {
     $urlParams = array();
     $urlParams['page'] = $this->getPage();
     if ($phone) {
+      // Remove NANP international calling code (1) due to an error in the API.
+      if (strlen($phone) == 11 && substr($phone, 0, 1) == "1") {
+        $phone = substr($phone, 1);
+      }
       $urlParams['phone'] = $phone;
     }
     if ($memberId) {
