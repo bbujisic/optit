@@ -48,7 +48,7 @@ function optit_members_list() {
       $entity->get('first_name') . ' ' . $entity->get('last_name'),
       $entity->get('carrier_name'),
       $entity->get('phone'),
-      $entity->get('created_at'),
+      optit_time_convert($entity->get('created_at')),
       $entity->get('status'),
       _optit_actions($actions)
     );

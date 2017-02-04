@@ -50,8 +50,8 @@ function optit_subscriptions_list($keyword_id) {
       $entity->get('member_id'),
       $entity->get('phone'),
       $entity->get('type'),
-      $entity->get('signup_date'),
-      $entity->get('created_at'),
+      optit_time_convert($entity->get('signup_date')),
+      optit_time_convert($entity->get('created_at')),
       _optit_actions($actions),
     );
   }

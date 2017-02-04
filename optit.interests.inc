@@ -53,7 +53,7 @@ function optit_interests_list($keyword_id) {
       $interest->get('id'),
       $interest->get('name'),
       $interest->get('description'),
-      $interest->get('created_at'),
+      optit_time_convert($interest->get('created_at')),
       $interest->get('mobile_subscription_count'),
       $interest->get('status'),
       _optit_actions($actions),
