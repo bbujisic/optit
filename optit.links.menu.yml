@@ -4,3 +4,9 @@ optit.configuration:
   parent: 'system.admin_config_services'
   description: 'Opt It Mobile administration page.'
   weight: -9
+optit.structure_optit:
+  title: 'Opt It Mobile'
+  route_name: 'optit.structure_optit'
+  parent: 'system.admin_structure'
+  description: 'Opt It Mobile.'
+  weight: -9

@@ -5,3 +5,10 @@ optit.configuration:
     _title: 'Opt It Mobile Settings'
   requirements:
     _permission: 'administer site configuration'
+optit.structure_optit:
+  path: '/admin/structure/optit'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Opt It Mobile'
+  requirements:
+    _permission: 'administer site configuration'
