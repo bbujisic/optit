@@ -1,7 +1,7 @@
 optit.configuration:
   path: '/admin/config/services/optit'
-    defaults:
-      _form: '\Drupal\optit\Form\SettingsForm'
-      _title: 'Opt It Mobile Settings'
-    requirements:
-      _permission: 'administer site configuration'
+  defaults:
+    _form: '\Drupal\optit\Form\SettingsForm'
+    _title: 'Opt It Mobile Settings'
+  requirements:
+    _permission: 'administer site configuration'
