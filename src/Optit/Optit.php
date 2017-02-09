@@ -1,14 +1,5 @@
 <?php
-/**
- * @file
- * Contains \Optit.
- */
-
-use Optit\Interest;
-use Optit\Keyword;
-use Optit\Member;
-use Optit\RESTclient;
-use Optit\Subscription;
+namespace Drupal\optit\Optit;
 
 class Optit {
 

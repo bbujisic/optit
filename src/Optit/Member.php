@@ -1,10 +1,6 @@
 <?php
-/**
- * @file
- * Contains \Optit\Member.
- */
 
-namespace Optit;
+namespace Drupal\optit\Optit;
 
 class Member extends Entity {
   protected $id;

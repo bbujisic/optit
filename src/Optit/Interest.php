@@ -1,10 +1,6 @@
 <?php
-/**
- * @file
- * Contains \Optit\Interest.
- */
 
-namespace Optit;
+namespace Drupal\optit\Optit;
 
 class Interest extends Entity {
   protected $url_interest_subscriptions;

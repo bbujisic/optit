@@ -1,10 +1,6 @@
 <?php
-/**
- * @file
- * Contains \Optit\Entity.
- */
 
-namespace Optit;
+namespace Drupal\optit\Optit;
 
 abstract class Entity {
   public function get($parameter) {

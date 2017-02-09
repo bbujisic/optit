@@ -1,10 +1,6 @@
 <?php
-/**
- * @file
- * Contains \Optit\Subscription.
- */
 
-namespace Optit;
+namespace Drupal\optit\Optit;
 
 class Subscription extends Entity {
   protected $type;

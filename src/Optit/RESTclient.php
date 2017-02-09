@@ -1,22 +1,19 @@
 <?php
-/**
- * @file
- * Contains \Optit\RESTclient.
- */
 
-namespace Optit;
-
-use LSS\XML2Array;
+namespace Drupal\optit\Optit;
 
 class RESTclient {
   private $username;
   private $password;
   private $apiEndpoint;
+  /** @var \GuzzleHttp\Client client */
+  private $client;
 
   public function __construct($username, $password, $apiEndpoint) {
     $this->username = $username;
     $this->password = $password;
     $this->apiEndpoint = $apiEndpoint;
+    $this->client = \Drupal::httpClient();
   }
 
   public function get($route, $urlParams = NULL, $postParams = NULL, $format = 'json') {
@@ -37,25 +34,30 @@ class RESTclient {
 
 
   private function drupalHTTPNightmare($route, $method = 'GET', $urlParams = NULL, $postParams = NULL, $format = 'json', $options = array()) {
-    $url = "http://{$this->username}:{$this->password}@{$this->apiEndpoint}/{$route}.{$format}";
+    $options = [];
 
-    $options['method'] = $method;
+    // Prepare authentication
+    $options['auth'] = [$this->username, $this->password];
+//    var_dump($options); die();
 
+    // Prepare URL
+    $url = "http://{$this->apiEndpoint}/{$route}.{$format}";
     if ($urlParams) {
       $url .= "?" . $this->mergeParams($urlParams);
     }
 
+    // Prepare POST params
     if ($postParams) {
-      $options['data'] = $this->mergeParams($postParams);
+      $options['form_params'] = $postParams;
     }
 
-    $response = drupal_http_request($url, $options);
+    $res = $this->client->request($method, $url, $options);
 
-    if ($response->code == 200) {
-      return $this->decodeData($response->data, $format);
+    if ($res->getStatusCode() == 200) {
+      return $this->decodeData($res->getBody(), $format);
     }
     else {
-      return $this->handleError($response);
+      return $this->handleError($res);
     }
   }
 
@@ -78,8 +80,8 @@ class RESTclient {
         }
         return $decoded;
       case "xml":
-        // @todo: Another relic od D7. It is difficult to inject the dependency in Drupal 7...
-        return XML2Array::createArray($data);
+        // @todo: This absolutely fails! Use D8 functions to parse XML.
+        return FALSE;
         break;
     }
     return TRUE;

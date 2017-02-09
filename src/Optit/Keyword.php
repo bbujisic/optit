@@ -1,10 +1,6 @@
 <?php
-/**
- * @file
- * Contains \Optit\Keyword.
- */
 
-namespace Optit;
+namespace Drupal\optit\Optit;
 
 class Keyword extends Entity {
   protected $id;
