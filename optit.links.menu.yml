@@ -10,3 +10,9 @@ optit.structure_optit:
   parent: 'system.admin_structure'
   description: 'Opt It Mobile.'
   weight: -9
+optit.structure_keywords:
+  title: 'Keywords'
+  route_name: 'optit.structure_keywords'
+  parent: 'optit.structure_optit'
+  description: 'Opt It Mobile keywords administration.'
+  weight: -30
