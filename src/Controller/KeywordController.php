@@ -3,15 +3,13 @@
 namespace Drupal\optit\Controller;
 
 use Drupal;
-use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
 use Drupal\optit\Optit\Optit;
 use Optit\Keyword;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides the cart page.
+ * Provides the keywords page.
  */
 class KeywordController extends ControllerBase {
 
@@ -73,8 +71,9 @@ class KeywordController extends ControllerBase {
       ];
       $actions[] = [
         'title' => $this->t('View interests'),
-        'url' => Url::fromRoute('optit.structure_keywords')
-        //"admin/structure/optit/keywords/{$keyword->get('id')}/interests"
+        'url' => Url::fromRoute('optit.structure_keywords_interests', [
+          'keyword_id' => $keyword->get('id')
+        ])
       ];
       if (Drupal::moduleHandler()->moduleExists('optit_send')) {
         $actions[] = [

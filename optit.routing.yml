@@ -33,3 +33,10 @@ optit.structure_keywords_edit:
     _title: 'Opt It Edit Keyword'
   requirements:
     _permission: 'optit view keywords'
+optit.structure_keywords_interests:
+  path: '/admin/structure/optit/keywords/{keyword_id}/interests'
+  defaults:
+    _controller: '\Drupal\optit\Controller\InterestController::listPage'
+    _title: 'Interests'
+  requirements:
+    _permission: 'optit view keywords'
