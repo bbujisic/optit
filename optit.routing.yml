@@ -19,3 +19,10 @@ optit.structure_keywords:
     _title: 'Keywords'
   requirements:
     _permission: 'optit view keywords'
+optit.structure_keywords_edit:
+  path: '/admin/structure/optit/keywords/{keyword_id}/edit'
+  defaults:
+    _form: '\Drupal\optit\Form\KeywordEditForm'
+    _title: 'Opt It Edit Keyword'
+  requirements:
+    _permission: 'optit view keywords'

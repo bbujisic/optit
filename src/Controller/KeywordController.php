@@ -19,10 +19,8 @@ class KeywordController extends ControllerBase {
    * Returns the list of available keywords.
    */
   public function listPage() {
-    $config = $this->config('optit.settings');
 
-    // Initiate bridge class and dependencies and get the list of keywords from the API.
-    $optit = new Optit($config->get('username'), $config->get('password'), OPTIT_URL);
+    $optit = Optit::create();
 
     // Decide page
     $page = (isset($_GET['page']) ? $_GET['page'] + 1 : 1);
@@ -64,8 +62,9 @@ class KeywordController extends ControllerBase {
       $actions = array();
       $actions[] = [
         'title' => $this->t('Edit'),
-        'url' => Url::fromRoute('optit.structure_keywords')
-        //"admin/structure/optit/keywords/{$keyword->get('id')}/edit"
+        'url' => Url::fromRoute('optit.structure_keywords_edit', [
+          'keyword_id' => $keyword->get('id')
+        ])
       ];
       $actions[] = [
         'title' => $this->t('View subscriptions'),

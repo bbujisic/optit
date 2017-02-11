@@ -3,6 +3,9 @@ namespace Drupal\optit\Optit;
 
 class Optit {
 
+  const OPTIT_URL = 'api.optitmobile.com/1';
+  const OPTIT_TIME_FORMAT = 'm/d/y h:i A T';
+
   private $http;
 
   // This is an ugly buffer, but it will do the trick for drupal's pagination purposes.
@@ -11,6 +14,13 @@ class Optit {
 
   // This is even uglier page property, which allows me not to set page numbers in method parameters.
   private $page = 1;
+
+  public static function create() {
+    // @todo: Use dependency injection.
+    $config = \Drupal::config('optit.settings');
+    // Initiate bridge class and dependencies and get the list of keywords from the API.
+    return new self($config->get('username'), $config->get('password'), self::OPTIT_URL);
+  }
 
   public function __construct($username, $password, $apiEndpoint) {
     $this->http = new RESTclient($username, $password, $apiEndpoint);
