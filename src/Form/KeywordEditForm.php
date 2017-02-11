@@ -29,12 +29,6 @@ class KeywordEditForm extends FormBase {
 
     $form = array();
 
-    // If submission was already tried, but it couldn't be done due to validation errors, we're instantiating Keyword entity from
-    // submitted values. Important only for new keywords.
-
-//    if (isset($form_state['input']['op'])) {
-//      $keyword = Keyword::create($form_state['input']);
-//    }
     // If it is a first form edit load, we're loading keyword from the API.
     if ($keyword_id) {
       $keyword = $optit->keywordGet($keyword_id);

@@ -1,0 +1,5 @@
+optit.structure_keywords_add:
+  route_name: optit.structure_keywords_add
+  title: 'New keyword'
+  appears_on:
+    - optit.structure_keywords
