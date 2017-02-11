@@ -40,15 +40,15 @@ class KeywordController extends ControllerBase {
     }
 
     // Start building vars for theme_table.
-    $header = array(
-      t('ID'),
-      t('Name'),
-      t('Type'),
-      t('Short code'),
-      t('Status'),
-      t('Subscription count'),
-      t('Actions')
-    );
+    $header = [
+      $this->t('ID'),
+      $this->t('Name'),
+      $this->t('Type'),
+      $this->t('Short code'),
+      $this->t('Status'),
+      $this->t('Subscription count'),
+      $this->t('Actions')
+    ];
 
     $rows = [];
 
@@ -57,7 +57,7 @@ class KeywordController extends ControllerBase {
     foreach ($keywords as $keyword) {
 
       // Prepare links for actions column of the list.
-      $actions = array();
+      $actions = [];
       $actions[] = [
         'title' => $this->t('Edit'),
         'url' => Url::fromRoute('optit.structure_keywords_edit', [

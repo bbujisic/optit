@@ -47,14 +47,14 @@ class Optit {
       $urlParams = $params;
     }
     else {
-      $urlParams = array();
+      $urlParams = [];
     }
     $urlParams['page'] = $this->getPage();
 
     $response = $this->http->get('keywords', $urlParams);
     $this->collectStats($response);
 
-    $keywords = array();
+    $keywords = [];
     if (!empty($response['keywords'])) {
       foreach ($response['keywords'] as $keyword) {
         $keywords[] = Keyword::create($keyword['keyword']);
@@ -90,7 +90,7 @@ class Optit {
    *   TRUE if keyword exists.
    */
   public function keywordExists($name) {
-    $urlParams = array();
+    $urlParams = [];
     $urlParams['keyword'] = $name;
 
     $response = $this->http->get("keywords/exists", $urlParams);
@@ -161,7 +161,7 @@ class Optit {
    *   Array of all Interest entities.
    */
   public function interestsGet($keywordId, $name = NULL) {
-    $urlParams = array();
+    $urlParams = [];
 
     if ($name) {
       $urlParams['name'] = $name;
@@ -169,7 +169,7 @@ class Optit {
 
     $response = $this->http->get("keywords/{$keywordId}/interests", $urlParams);
 
-    $interests = array();
+    $interests = [];
     if (!empty($response['interests'])) {
       foreach ($response['interests'] as $i) {
         $interests[] = Interest::create($i['interest']);
@@ -194,7 +194,7 @@ class Optit {
   public function interestsGetByPhone($keywordId, $phone) {
     $response = $this->http->get("keywords/{$keywordId}/subscriptions/{$phone}/interests");
 
-    $interests = array();
+    $interests = [];
     if (!empty($response['interests'])) {
       foreach ($response['interests'] as $i) {
         $interests[] = Interest::create($i['interest']);
@@ -227,7 +227,7 @@ class Optit {
     // @todo: Handle http request failure.
 
     // Prepare params.
-    $postParams = array();
+    $postParams = [];
     $postParams['name'] = $name;
     if ($description) {
       $postParams['description'] = $description;
@@ -272,7 +272,7 @@ class Optit {
   public function interestGetSubscriptions($interestId, $phone = NULL, $memberId = NULL, $firstName = NULL, $lastName = NULL, $zip = NULL, $gender = NULL, $signupDateStart = NULL, $signupDateEnd = NULL) {
 
     // Prepare params.
-    $urlParams = array();
+    $urlParams = [];
     $urlParams['page'] = $this->getPage();
     if ($phone) {
       $urlParams['phone'] = $phone;
@@ -302,7 +302,7 @@ class Optit {
     $response = $this->http->get("interests/{$interestId}/subscriptions", $urlParams);
     $this->collectStats($response);
 
-    $subscriptions = array();
+    $subscriptions = [];
     foreach ($response['subscriptions'] as $record) {
       $subscriptions[] = Subscription::create($record['subscription']);
     }
@@ -332,7 +332,7 @@ class Optit {
     if (!$phone && !$memberId) {
       return FALSE;
     }
-    $postParams = array();
+    $postParams = [];
     if ($phone) {
       $postParams['phone'] = $phone;
     }
@@ -377,7 +377,7 @@ class Optit {
    */
   public function membersGet($phone = NULL, $firstName = NULL, $lastName = NULL, $zip = NULL, $gender = NULL) {
     // Prepare params.
-    $urlParams = array();
+    $urlParams = [];
     $urlParams['page'] = $this->getPage();
     if ($phone) {
       $urlParams['phone'] = $phone;
@@ -398,7 +398,7 @@ class Optit {
     $response = $this->http->get('members', $urlParams);
     $this->collectStats($response);
 
-    $members = array();
+    $members = [];
     if (!empty($response['members'])) {
       foreach ($response['members'] as $record) {
         $members[] = Member::create($record['member']);
@@ -446,7 +446,7 @@ class Optit {
    */
   public function subscriptionsGet($keywordId, $phone = NULL, $memberId = NULL, $firstName = NULL, $lastName = NULL, $zip = NULL, $gender = NULL, $signupDateStart = NULL, $signupDateEnd = NULL) {
     // Prepare params.
-    $urlParams = array();
+    $urlParams = [];
     $urlParams['page'] = $this->getPage();
     if ($phone) {
       // Remove NANP international calling code (1) due to an error in the API.
@@ -479,7 +479,7 @@ class Optit {
 
     if ($response = $this->http->get("keywords/{$keywordId}/subscriptions", $urlParams)) {
       $this->collectStats($response);
-      $subscriptions = array();
+      $subscriptions = [];
       if (!empty($response['subscriptions'])) {
         foreach ($response['subscriptions'] as $record) {
           $subscriptions[] = Subscription::create($record['subscription']);
@@ -559,7 +559,7 @@ class Optit {
     }
 
     // Preparing params.
-    $postParams = array();
+    $postParams = [];
     if ($phone) {
       $postParams['phone'] = $phone;
     }
@@ -657,7 +657,7 @@ class Optit {
    * @return bool
    */
   public function messagePhone($phone, $keywordId, $title, $message) {
-    $postParams = array();
+    $postParams = [];
     $postParams['phone'] = $phone;
     $postParams['keyword_id'] = $keywordId;
     $postParams['title'] = $title;
@@ -683,7 +683,7 @@ class Optit {
    * @return bool
    */
   public function messageKeyword($keywordId, $title, $message) {
-    $postParams = array();
+    $postParams = [];
     $postParams['keyword_id'] = $keywordId;
     $postParams['title'] = $title;
     $postParams['message'] = $message;
@@ -709,7 +709,7 @@ class Optit {
    * @return bool
    */
   public function messageKeywordMMS($keywordId, $title, $message, $contentUrl = NULL) {
-    $postParams = array();
+    $postParams = [];
     $postParams['keyword_id'] = $keywordId;
     $postParams['title'] = $title;
     $postParams['message'] = $message;
@@ -736,7 +736,7 @@ class Optit {
    * @return bool
    */
   public function messageInterest($interestId, $title, $message) {
-    $postParams = array();
+    $postParams = [];
     $postParams['interest_id'] = $interestId;
     $postParams['title'] = $title;
     $postParams['message'] = $message;
@@ -775,7 +775,7 @@ class Optit {
     }
 
     // Prepare a request.
-    $postParams = array();
+    $postParams = [];
     $postParams['data'] = $xml->asXML();
     $options = array('headers' => array('Content-Type' => 'text/xml'));
 
@@ -809,7 +809,7 @@ class Optit {
     }
 
     // Prepare a request.
-    $postParams = array();
+    $postParams = [];
     $postParams['data'] = $xml->asXML();
     $options = array('headers' => array('Content-Type' => 'text/xml'));
 

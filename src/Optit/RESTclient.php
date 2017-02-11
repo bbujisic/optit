@@ -20,7 +20,7 @@ class RESTclient {
     return $this->drupalHTTPNightmare($route, 'GET', $urlParams, $postParams, $format);
   }
 
-  public function post($route, $urlParams = NULL, $postParams = NULL, $options = array(), $format = 'json') {
+  public function post($route, $urlParams = NULL, $postParams = NULL, $options = [], $format = 'json') {
     return $this->drupalHTTPNightmare($route, 'POST', $urlParams, $postParams, $format, $options);
   }
 
@@ -33,7 +33,7 @@ class RESTclient {
   }
 
 
-  private function drupalHTTPNightmare($route, $method = 'GET', $urlParams = NULL, $postParams = NULL, $format = 'json', $options = array()) {
+  private function drupalHTTPNightmare($route, $method = 'GET', $urlParams = NULL, $postParams = NULL, $format = 'json', $options = []) {
     $options = [];
 
     // Prepare authentication
@@ -62,7 +62,7 @@ class RESTclient {
   }
 
   private function mergeParams($params) {
-    $param = array();
+    $param = [];
     foreach ($params as $key => $value) {
       $param[] = $key . '=' . urlencode($value);
     }

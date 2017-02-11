@@ -41,7 +41,7 @@ class InterestController extends ControllerBase {
     }
 
     // Start building vars for theme_table.
-    $header = array(
+    $header = [
       $this->t('ID'),
       $this->t('Name'),
       $this->t('Description'),
@@ -49,7 +49,7 @@ class InterestController extends ControllerBase {
       $this->t('Number of subscriptions'),
       $this->t('Status'),
       $this->t('Actions')
-    );
+    ];
 
     $rows = [];
 
@@ -58,30 +58,30 @@ class InterestController extends ControllerBase {
     foreach ($interests as $interest) {
 
       // Prepare links for actions column of the list.
-      $actions = array();
+      $actions = [];
 
-      $actions[] = array(
-        'title' => t('View subscriptions'),
+      $actions[] = [
+        'title' => $this->t('View subscriptions'),
         'url' => Url::fromRoute('optit.structure_keywords')
         //'href' => "admin/structure/optit/keywords/{$keyword_id}/interests/{$interest->get('id')}/subscriptions"
-      );
-      $actions[] = array(
-        'title' => t('Subscribe a member'),
+      ];
+      $actions[] = [
+        'title' => $this->t('Subscribe a member'),
         'url' => Url::fromRoute('optit.structure_keywords')
         //'href' => "admin/structure/optit/keywords/{$keyword_id}/interests/{$interest->get('id')}/subscriptions/new"
-      );
+      ];
       if (Drupal::moduleHandler()->moduleExists('optit_send')) {
-        $actions[] = array(
-          'title' => t('Send message'),
+        $actions[] = [
+          'title' => $this->t('Send message'),
           'url' => Url::fromRoute('optit.structure_keywords')
           //'href' => "admin/structure/optit/keywords/{$keyword_id}/interests/{$interest->get('id')}/subscriptions/message"
-        );
+        ];
       }
 
 
-      $vars['rows'][] = array();
+      $vars['rows'][] = [];
 
-      $rows[] = array(
+      $rows[] = [
         $interest->get('id'),
         $interest->get('name'),
         $interest->get('description'),
@@ -89,14 +89,14 @@ class InterestController extends ControllerBase {
         $interest->get('mobile_subscription_count'),
         $interest->get('status'),
         _optit_actions($actions),
-      );
+      ];
     }
 
-    $build['table'] = array(
+    $build['table'] = [
       '#theme' => 'table',
       '#header' => $header,
       '#rows' => $rows,
-    );
+    ];
 
 //    // Initialize the pager
 //    pager_default_initialize($optit->totalPages, 1);

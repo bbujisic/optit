@@ -27,7 +27,7 @@ class KeywordEditForm extends FormBase {
     // Initiate bridge class and dependencies and get the list of keywords from the API.
     $optit = Optit::create();
 
-    $form = array();
+    $form = [];
 
     // If it is a first form edit load, we're loading keyword from the API.
     if ($keyword_id) {
@@ -40,30 +40,30 @@ class KeywordEditForm extends FormBase {
 
     $form['#keyword_id'] = $keyword_id;
 
-    $this->select('billing_type', t('Billing type'), $keyword, $form);
+    $this->select('billing_type', $this->t('Billing type'), $keyword, $form);
 
-    $this->textfield('keyword_name', t('Keyword name'), $keyword, $form, array('#required' => TRUE));
-    $this->textfield('internal_name', t('Internal name'), $keyword, $form, array('#required' => TRUE));
+    $this->textfield('keyword_name', $this->t('Keyword name'), $keyword, $form, ['#required' => TRUE]);
+    $this->textfield('internal_name', $this->t('Internal name'), $keyword, $form, ['#required' => TRUE]);
 
     // @todo: Add interests once you create Interest entity.
 
-    $this->select('welcome_msg_type', t('Welcome message type'), $keyword, $form);
-    $this->textfield('welcome_msg', t('Welcome message'), $keyword, $form, array(
+    $this->select('welcome_msg_type', $this->t('Welcome message type'), $keyword, $form);
+    $this->textfield('welcome_msg', $this->t('Welcome message'), $keyword, $form, [
       '#maxlength' => 93
-    ));
-    $this->select('web_form_verification_msg_type', t('Web form verification message type'), $keyword, $form);
-    $this->textfield('web_form_verification_msg', t('Web form verification message'), $keyword, $form, array(
+    ]);
+    $this->select('web_form_verification_msg_type', $this->t('Web form verification message type'), $keyword, $form);
+    $this->textfield('web_form_verification_msg', $this->t('Web form verification message'), $keyword, $form, [
       '#maxlength' => 120
-    ));
-    $this->select('already_subscribed_msg_type', t('Already subscribed message type'), $keyword, $form);
-    $this->textfield('already_subscribed_msg', t('Already subscribed message'), $keyword, $form, array(
+    ]);
+    $this->select('already_subscribed_msg_type', $this->t('Already subscribed message type'), $keyword, $form);
+    $this->textfield('already_subscribed_msg', $this->t('Already subscribed message'), $keyword, $form, [
       '#maxlength' => 120
-    ));
+    ]);
 
-    $form['submit'] = array(
+    $form['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Submit')
-    );
+      '#value' => $this->t('Submit')
+    ];
 
     return $form;
   }
@@ -124,21 +124,21 @@ class KeywordEditForm extends FormBase {
   }
 
 
-  private function select($name, $title, $entity, &$form, $options = array()) {
-    $form[$name] = array(
+  private function select($name, $title, $entity, &$form, $options = []) {
+    $form[$name] = [
         '#type' => 'select',
         '#title' => $title,
         '#default_value' => $entity->get($name),
         '#options' => $entity->allowedValues($name),
-      ) + $options;
+      ] + $options;
   }
 
-  private function textfield($name, $title, $entity, &$form, $options = array()) {
-    $form[$name] = array(
+  private function textfield($name, $title, $entity, &$form, $options = []) {
+    $form[$name] = [
         '#type' => 'textfield',
         '#title' => $title,
         '#default_value' => $entity->get($name),
-      ) + $options;
+      ] + $options;
   }
 
 }
