@@ -3,3 +3,8 @@ optit.structure_keywords_add:
   title: 'New keyword'
   appears_on:
     - optit.structure_keywords
+optit.structure_interests_add:
+  route_name: optit.structure_keywords_interests_add
+  title: 'New interest'
+  appears_on:
+    - optit.structure_keywords_interests

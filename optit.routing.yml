@@ -40,3 +40,10 @@ optit.structure_keywords_interests:
     _title: 'Interests'
   requirements:
     _permission: 'optit view keywords'
+optit.structure_keywords_interests_add:
+  path: '/admin/structure/optit/keywords/{keyword_id}/interests/add'
+  defaults:
+    _form: '\Drupal\optit\Form\InterestEditForm'
+    _title: 'New Interest'
+  requirements:
+    _permission: 'optit view keywords'
