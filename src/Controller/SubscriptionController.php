@@ -2,7 +2,6 @@
 
 namespace Drupal\optit\Controller;
 
-use Drupal;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
 use Drupal\optit\Optit\Subscription;
@@ -19,7 +18,6 @@ class SubscriptionController extends ControllerBase {
   public function listPage($keyword_id) {
 
     $optit = Optit::create();
-    $interests = $optit->interestsGet($keyword_id);
 
     // Decide page
     $page = (isset($_GET['page']) ? $_GET['page'] + 1 : 1);
@@ -28,15 +26,15 @@ class SubscriptionController extends ControllerBase {
     $subscriptions = $optit->setPage($page)
       ->subscriptionsGet($keyword_id);
 
-
     $build = [];
 
-    if (count($interests) == 0) {
+    if (count($subscriptions) == 0) {
       $build['empty'] = [
         '#prefix' => '<div class="empty-page">',
-        '#markup' => $this->t('Your interest list is empty.'),
+        '#markup' => $this->t('Your subscription list is empty.'),
         '#suffix' => '</div>',
       ];
+
       return $build;
     }
 
