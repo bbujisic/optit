@@ -47,3 +47,10 @@ optit.structure_keywords_interests_add:
     _title: 'New Interest'
   requirements:
     _permission: 'optit view keywords'
+optit.structure_keywords_subscriptions:
+  path: '/admin/structure/optit/keywords/{keyword_id}/subscriptions'
+  defaults:
+    _controller: '\Drupal\optit\Controller\SubscriptionController::listPage'
+    _title: 'Subscriptions'
+  requirements:
+    _permission: 'optit view keywords'

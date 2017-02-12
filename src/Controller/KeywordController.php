@@ -66,8 +66,9 @@ class KeywordController extends ControllerBase {
       ];
       $actions[] = [
         'title' => $this->t('View subscriptions'),
-        'url' => Url::fromRoute('optit.structure_keywords')
-        //"admin/structure/optit/keywords/{$keyword->get('id')}/subscriptions"
+        'url' => Url::fromRoute('optit.structure_keywords_subscriptions', [
+          'keyword_id' => $keyword->get('id')
+        ])
       ];
       $actions[] = [
         'title' => $this->t('View interests'),
