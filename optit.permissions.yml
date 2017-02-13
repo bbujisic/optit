@@ -11,5 +11,5 @@ optit view members:
   title: 'View members'
   description: 'Permission to view Opt It members.'
 optit edit members:
-  title: 'View members'
+  title: 'Edit members'
   description: 'Permission to create or edit Opt It members.'
