@@ -75,7 +75,6 @@ class KeywordEditForm extends FormBase {
 
     // Keyword must start with a letter.
     if (!preg_match('/^[A-Za-z]/', $form_state->getValue('keyword_name'))) {
-      var_dump('BBB Keyword name must start with a letter'); //die();
       $form_state->setErrorByName('keyword_name', $this->t('Keyword name must start with a letter.'));
     }
 
