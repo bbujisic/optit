@@ -8,3 +8,8 @@ optit.structure_interests_add:
   title: 'New interest'
   appears_on:
     - optit.structure_keywords_interests
+optit.structure_subscriptions_add:
+  route_name: optit.structure_keywords_subscriptions_add
+  title: 'New Subscription'
+  appears_on:
+    - optit.structure_keywords_subscriptions

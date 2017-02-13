@@ -54,3 +54,10 @@ optit.structure_keywords_subscriptions:
     _title: 'Subscriptions'
   requirements:
     _permission: 'optit view keywords'
+optit.structure_keywords_subscriptions_add:
+  path: '/admin/structure/optit/keywords/{keyword_id}/subscriptions/new'
+  defaults:
+    _form: '\Drupal\optit\Form\SubscriptionEditForm'
+    _title: 'New Subscription'
+  requirements:
+    _permission: 'optit edit keywords'
