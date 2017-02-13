@@ -68,3 +68,11 @@ optit.structure_keywords_subscriptions_unsubscribe:
     _title: 'Cancel subscription'
   requirements:
     _permission: 'optit edit keywords'
+
+optit.structure_members:
+  path: '/admin/structure/optit/members'
+  defaults:
+    _controller: '\Drupal\optit\Controller\MemberController::listPage'
+    _title: 'Members'
+  requirements:
+    _permission: 'optit view keywords'

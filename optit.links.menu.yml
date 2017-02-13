@@ -16,3 +16,9 @@ optit.structure_keywords:
   parent: 'optit.structure_optit'
   description: 'Opt It Mobile keywords administration.'
   weight: -30
+optit.structure_members:
+  title: 'Members'
+  route_name: 'optit.structure_members'
+  parent: 'optit.structure_optit'
+  description: 'Opt It Mobile member administration.'
+  weight: -30
