@@ -67,7 +67,7 @@ optit.structure_keywords_subscriptions_unsubscribe:
     _form: '\Drupal\optit\Form\SubscriptionCancelKeywordForm'
     _title: 'Cancel subscription'
   requirements:
-    _permission: 'optit edit keywords'
+    _permission: 'optit edit members'
 
 optit.structure_members:
   path: '/admin/structure/optit/members'
@@ -75,4 +75,11 @@ optit.structure_members:
     _controller: '\Drupal\optit\Controller\MemberController::listPage'
     _title: 'Members'
   requirements:
-    _permission: 'optit view keywords'
+    _permission: 'optit view members'
+optit.structure_members_unsubscribe:
+  path: '/admin/structure/optit/members/{phone}/unsubscribe'
+  defaults:
+    _form: '\Drupal\optit\Form\SubscriptionCancelAllForm'
+    _title: 'Cancel subscription'
+  requirements:
+    _permission: 'optit edit members'

@@ -54,8 +54,10 @@ class MemberController extends ControllerBase {
       // Prepare links for actions column of the list.
       $actions = array();
       $actions[] = array(
-        'title' => t('Unsubscribe all'),
-        'url' => Url::fromRoute('optit.structure_members')
+        'title' => $this->t('Unsubscribe all'),
+        'url' => Url::fromRoute('optit.structure_members_unsubscribe', [
+          'phone' => $entity->get('phone'),
+        ]),
       );
 
       $rows[] = [
