@@ -59,7 +59,10 @@ class SubscriptionController extends ControllerBase {
 
       $actions[] = array(
         'title' => t('Unsubscribe'),
-        'url' => Url::fromRoute('optit.structure_keywords')
+        'url' => Url::fromRoute('optit.structure_keywords_subscriptions_unsubscribe', [
+          'keyword_id' => $keyword_id,
+          'phone' => $subscription->get('phone'),
+        ])
         //'href' => "admin/structure/optit/keywords/{$keyword_id}/subscriptions/{$entity->get('phone')}/unsubscribe"
       );
       $actions[] = array(

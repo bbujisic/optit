@@ -61,3 +61,10 @@ optit.structure_keywords_subscriptions_add:
     _title: 'New Subscription'
   requirements:
     _permission: 'optit edit keywords'
+optit.structure_keywords_subscriptions_unsubscribe:
+  path: '/admin/structure/optit/keywords/{keyword_id}/subscriptions/{phone}/unsubscribe'
+  defaults:
+    _form: '\Drupal\optit\Form\SubscriptionCancelKeywordForm'
+    _title: 'Cancel subscription'
+  requirements:
+    _permission: 'optit edit keywords'
