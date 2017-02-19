@@ -76,18 +76,17 @@ class KeywordController extends ControllerBase {
           'keyword_id' => $keyword->get('id')
         ])
       ];
-      if (Drupal::moduleHandler()->moduleExists('optit_send')) {
         $actions[] = [
           'title' => $this->t('Send SMS'),
-          'url' => Url::fromRoute('optit.structure_keywords')
-          //"admin/structure/optit/keywords/{$keyword->get('id')}/subscriptions/sms"
+          'url' => Url::fromRoute('optit.structure_keywords_subscriptions_sms', [
+            'keyword_id' => $keyword->get('id')
+          ])
         ];
-        $actions[] = [
-          'title' => $this->t('Send MMS'),
-          'url' => Url::fromRoute('optit.structure_keywords')
-          //"admin/structure/optit/keywords/{$keyword->get('id')}/subscriptions/mms"
-        ];
-      }
+//        $actions[] = [
+//          'title' => $this->t('Send MMS'),
+//          'url' => Url::fromRoute('optit.structure_keywords')
+//          //"admin/structure/optit/keywords/{$keyword->get('id')}/subscriptions/mms"
+//        ];
 
       $rows[] = array(
         $keyword->get('id'),

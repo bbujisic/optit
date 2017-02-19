@@ -22,3 +22,9 @@ optit.structure_members:
   parent: 'optit.structure_optit'
   description: 'Opt It Mobile member administration.'
   weight: -30
+optit.structure_send_sms:
+  title: 'Send SMS'
+  route_name: 'optit.structure_send_sms'
+  parent: 'optit.structure_optit'
+  description: 'Opt It Mobile send SMS.'
+  weight: -30

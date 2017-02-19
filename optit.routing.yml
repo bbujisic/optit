@@ -54,6 +54,13 @@ optit.structure_keywords_subscriptions:
     _title: 'Subscriptions'
   requirements:
     _permission: 'optit view keywords'
+optit.structure_keywords_subscriptions_sms:
+  path: '/admin/structure/optit/keywords/{keyword_id}/subscriptions/sms'
+  defaults:
+    _form: '\Drupal\optit\Form\KeywordMessageSmsForm'
+    _title: 'Send an SMS.'
+  requirements:
+    _permission: 'optit send message'
 optit.structure_keywords_subscriptions_add:
   path: '/admin/structure/optit/keywords/{keyword_id}/subscriptions/new'
   defaults:
