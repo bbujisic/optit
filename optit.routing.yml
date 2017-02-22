@@ -90,6 +90,13 @@ optit.structure_members_unsubscribe:
     _title: 'Cancel subscription'
   requirements:
     _permission: 'optit edit members'
+optit.structure_send:
+  path: '/admin/structure/optit/send'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Send a message'
+  requirements:
+    _permission: 'optit send message'
 optit.structure_send_sms:
   path: '/admin/structure/optit/send/sms'
   defaults:
