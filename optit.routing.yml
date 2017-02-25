@@ -104,6 +104,13 @@ optit.structure_members_unsubscribe:
     _title: 'Cancel subscription'
   requirements:
     _permission: 'optit edit members'
+optit.structure_members_interest_unsubscribe:
+  path: '/admin/structure/optit/members/{phone}/interests/{interest_id}/unsubscribe'
+  defaults:
+    _form: '\Drupal\optit\Form\SubscriptionCancelInterestForm'
+    _title: 'Cancel interest subscription'
+  requirements:
+    _permission: 'optit edit members'
 optit.structure_send:
   path: '/admin/structure/optit/send'
   defaults:

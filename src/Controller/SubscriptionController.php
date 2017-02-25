@@ -80,7 +80,10 @@ class SubscriptionController extends ControllerBase {
       else {
         $actions[] = array(
           'title' => t('Unsubscribe'),
-          'url' => Url::fromRoute('optit.structure_keywords')
+          'url' => Url::fromRoute('optit.structure_members_interest_unsubscribe', [
+            'phone' => $subscription->get('phone'),
+            'interest_id' => $interest_id,
+          ])
           // href: admin/structure/optit/members/{$entity->get('phone')}/interests/{$interest_id}/unsubscribe
         );
       }
