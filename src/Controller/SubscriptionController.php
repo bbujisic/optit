@@ -15,7 +15,7 @@ class SubscriptionController extends ControllerBase {
   /**
    * Returns the list of available interests.
    */
-  public function listPage($keyword_id) {
+  public function listPage($keyword_id, $interest_id = NULL) {
 
     $optit = Optit::create();
 
@@ -23,8 +23,14 @@ class SubscriptionController extends ControllerBase {
     $page = (isset($_GET['page']) ? $_GET['page'] + 1 : 1);
 
     // Run query against the API.
-    $subscriptions = $optit->setPage($page)
-      ->subscriptionsGet($keyword_id);
+    if (!$interest_id) {
+      $subscriptions = $optit->setPage($page)
+        ->subscriptionsGet($keyword_id);
+    }
+    else {
+      $subscriptions = $optit->setPage($page)
+        ->interestGetSubscriptions($interest_id);
+    }
 
     $build = [];
 
@@ -57,19 +63,27 @@ class SubscriptionController extends ControllerBase {
       // Prepare links for actions column of the list.
       $actions = [];
 
-      $actions[] = array(
-        'title' => t('Unsubscribe'),
-        'url' => Url::fromRoute('optit.structure_keywords_subscriptions_unsubscribe', [
-          'keyword_id' => $keyword_id,
-          'phone' => $subscription->get('phone'),
-        ])
-        //'href' => "admin/structure/optit/keywords/{$keyword_id}/subscriptions/{$entity->get('phone')}/unsubscribe"
-      );
-      $actions[] = array(
-        'title' => t('Send message'),
-        'url' => Url::fromRoute('optit.structure_keywords')
-        //'href' => "admin/structure/optit/keywords/{$keyword_id}/subscriptions/message/{$entity->get('phone')}"
-      );
+      if (!$interest_id) {
+        $actions[] = array(
+          'title' => t('Unsubscribe'),
+          'url' => Url::fromRoute('optit.structure_keywords_subscriptions_unsubscribe', [
+            'keyword_id' => $keyword_id,
+            'phone' => $subscription->get('phone'),
+          ])
+        );
+        $actions[] = array(
+          'title' => t('Send message'),
+          'url' => Url::fromRoute('optit.structure_keywords')
+          //'href' => "admin/structure/optit/keywords/{$keyword_id}/subscriptions/message/{$entity->get('phone')}"
+        );
+      }
+      else {
+        $actions[] = array(
+          'title' => t('Unsubscribe'),
+          'url' => Url::fromRoute('optit.structure_keywords')
+          // href: admin/structure/optit/members/{$entity->get('phone')}/interests/{$interest_id}/unsubscribe
+        );
+      }
 
       $vars['rows'][] = [];
 
@@ -101,5 +115,10 @@ class SubscriptionController extends ControllerBase {
     ];
 
     return $build;
+  }
+
+
+  function listByInterestPage() {
+
   }
 }

@@ -62,8 +62,10 @@ class InterestController extends ControllerBase {
 
       $actions[] = [
         'title' => $this->t('View subscriptions'),
-        'url' => Url::fromRoute('optit.structure_keywords')
-        //'href' => "admin/structure/optit/keywords/{$keyword_id}/interests/{$interest->get('id')}/subscriptions"
+        'url' => Url::fromRoute('optit.structure_keywords_interests_subscriptions', [
+          'keyword_id' => $keyword_id,
+          'interest_id' => $interest->get('id'),
+        ])
       ];
       $actions[] = [
         'title' => $this->t('Subscribe a member'),
