@@ -73,8 +73,10 @@ class SubscriptionController extends ControllerBase {
         );
         $actions[] = array(
           'title' => t('Send message'),
-          'url' => Url::fromRoute('optit.structure_keywords')
-          //'href' => "admin/structure/optit/keywords/{$keyword_id}/subscriptions/message/{$entity->get('phone')}"
+          'url' => Url::fromRoute('optit.structure_keywords_subscriptions_sms_phone', [
+            'keyword_id' => $keyword_id,
+            'phone' => $subscription->get('phone'),
+          ])
         );
       }
       else {
@@ -84,7 +86,6 @@ class SubscriptionController extends ControllerBase {
             'phone' => $subscription->get('phone'),
             'interest_id' => $interest_id,
           ])
-          // href: admin/structure/optit/members/{$entity->get('phone')}/interests/{$interest_id}/unsubscribe
         );
       }
 
