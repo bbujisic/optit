@@ -61,6 +61,13 @@ optit.structure_keywords_interests_subscriptions_add:
     _title: 'Subscribe to an interest'
   requirements:
     _permission: 'optit edit keywords'
+optit.structure_keywords_interests_subscriptions_sms:
+  path: '/admin/structure/optit/keywords/{keyword_id}/interests/{interest_id}/subscriptions/sms'
+  defaults:
+    _form: '\Drupal\optit\Form\KeywordMessageSmsForm'
+    _title: 'Send an SMS.'
+  requirements:
+    _permission: 'optit send message'
 optit.structure_keywords_subscriptions:
   path: '/admin/structure/optit/keywords/{keyword_id}/subscriptions'
   defaults:

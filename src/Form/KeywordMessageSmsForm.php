@@ -22,7 +22,7 @@ class KeywordMessageSmsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $keyword_id = NULL, $phone = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $keyword_id = NULL, $phone = NULL, $interest_id = NULL) {
     $optit = Optit::create();
     $keywords = $optit->keywordsGet();
     $options = array();
@@ -46,6 +46,10 @@ class KeywordMessageSmsForm extends FormBase {
         '#options' => $options,
       );
     }
+    $form['interest_id'] = array(
+      '#type' => 'value',
+      '#value' => $interest_id,
+    );
     $form['phone'] = array(
       '#type' => 'value',
       '#value' => $phone,
@@ -71,25 +75,25 @@ class KeywordMessageSmsForm extends FormBase {
     return $form;
   }
 
-  function validateForm(array &$form, FormStateInterface $form_state) {
-    // Make sure keyword and message are less than 160 characters.
-    $keyword_id = $form_state->getValue('keyword_id');
-    $message = $form_state->getValue('message');
-    $keyword = $form['keyword_id']['#options'][$keyword_id];
 
+  function validateForm(array &$form, FormStateInterface $form_state) {
+    $message = $form_state->getValue('message');
+
+    // Make sure keyword and message are shorter than 160.
+    $keyword_id = $form_state->getValue('keyword_id');
+    $keyword = $form['keyword_id']['#options'][$keyword_id];
     $length = strlen($keyword . ': ' . $message);
     if ($length > 160) {
       $form_state->setErrorByName('message', $this->t('The message must be less than 160 characters including your keyword in the beginning of the message. Your message has :length characters', array(':length' => $length)));
     };
-
   }
-
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $keyword_id = $form_state->getValue('keyword_id');
+    $interest_id = $form_state->getValue('interest_id');
     $message = $form_state->getValue('message');
     $phone = $form_state->getValue('phone');
     $title = $form_state->getValue('title');
@@ -98,6 +102,9 @@ class KeywordMessageSmsForm extends FormBase {
 
     if ($phone) {
       $success = $optit->messagePhone($phone, $keyword_id, $title, $message);
+    }
+    elseif ($interest_id) {
+      $success = $optit->messageInterest($interest_id, $title, $message);
     }
     else {
       $success = $optit->messageKeyword($keyword_id, $title, $message);
