@@ -13,3 +13,8 @@ optit.structure_subscriptions_add:
   title: 'New Subscription'
   appears_on:
     - optit.structure_keywords_subscriptions
+optit.structure_keywords_interests_subscriptions_add:
+  route_name: optit.structure_keywords_interests_subscriptions_add
+  title: 'Subscribe a member to an interest'
+  appears_on:
+    - optit.structure_keywords_interests_subscriptions

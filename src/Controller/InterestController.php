@@ -69,7 +69,10 @@ class InterestController extends ControllerBase {
       ];
       $actions[] = [
         'title' => $this->t('Subscribe a member'),
-        'url' => Url::fromRoute('optit.structure_keywords')
+        'url' => Url::fromRoute('optit.structure_keywords_interests_subscriptions_add', [
+          'keyword_id' => $keyword_id,
+          'interest_id' => $interest->get('id'),
+        ])
         //'href' => "admin/structure/optit/keywords/{$keyword_id}/interests/{$interest->get('id')}/subscriptions/new"
       ];
       if (Drupal::moduleHandler()->moduleExists('optit_send')) {
