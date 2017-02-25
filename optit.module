@@ -1,25 +1,5 @@
 <?php
 
-///**
-// * Implements hook_help().
-// */
-//function optit_help($route_name, RouteMatchInterface $route_match) {
-//  switch ($route_name) {
-//    case "admin/structure/optit/members":
-//      return "<p>" . t("This is an Opt It membership administration page. You can find a member here and unsubscribe them from all keywords.") . "</p>";
-//      break;
-//    case "admin/structure/optit/keywords":
-//      return "<p>" . t("Use keywords to run multiple programs. Setup one or many keywords for subscription groups, contests, voting, auto-responses, message forwarding and segmenting your users. Click on the Actions link for keyword-specific operations.") . "</p>";
-//      break;
-//    case "admin/structure/optit/keywords/%/subscriptions":
-//      return "<p>" . t("In this page, you can administer subscriptions to a keyword. You can opt-in and opt-out phone numbers, send messages to entire group, or message individual subscriber.") . "</p>";
-//      break;
-//    case "admin/structure/optit/keywords/%/interests":
-//      return "<p>" . t("Group your customers into interests. Group them based on demographics, message history, location and more. Use interests to send targeted messages.") . "</p>";
-//      break;
-//  }
-//}
-
 function _optit_us_states() {
   return array(
     'AL' => 'Alabama',
