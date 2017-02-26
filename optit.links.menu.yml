@@ -34,3 +34,9 @@ optit.structure_send_sms:
   parent: 'optit.structure_send'
   description: 'Opt It Mobile send SMS.'
   weight: -30
+optit.structure_send_smms:
+  title: 'Send MMS'
+  route_name: 'optit.structure_send_mms'
+  parent: 'optit.structure_send'
+  description: 'Opt It Mobile send MMS.'
+  weight: -30

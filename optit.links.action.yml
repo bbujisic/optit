@@ -18,6 +18,11 @@ optit.structure_subscriptions_sms:
   title: 'Send SMS'
   appears_on:
     - optit.structure_keywords_subscriptions
+optit.structure_subscriptions_mms:
+  route_name: optit.structure_keywords_subscriptions_mms
+  title: 'Send MMS'
+  appears_on:
+    - optit.structure_keywords_subscriptions
 optit.structure_keywords_interests_subscriptions_add:
   route_name: optit.structure_keywords_interests_subscriptions_add
   title: 'Subscribe a member to an interest'
